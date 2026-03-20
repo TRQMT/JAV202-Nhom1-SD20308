@@ -1,0 +1,127 @@
+package com.polycoffee.dao;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.polycoffee.entity.Category;
+import com.polycoffee.util.JdbcUtil;
+
+public class CategoryDAO implements CrudDAO<Category, Integer>{
+	//Thêm mới loại đồ uống
+	@Override
+	public int create(Category entity) {
+		// TODO Auto-generated method stub
+		String sql = "INSERT INTO categories(name, active) values (?, ?)";
+		try {
+			return JdbcUtil.executeUpdate(sql, entity.getName(), entity.isActive());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	//Cập nhật loại đồ uống
+	@Override
+	public int update(Category entity) {
+		// TODO Auto-generated method stub
+		String sql = "UPDATE categories SET name = ?, active = ? WHERE id = ?";
+		try {
+			return JdbcUtil.executeUpdate(sql, entity.getName(), entity.isActive(), entity.getId());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	//Xóa loại đồ uống
+	@Override
+	public int delete(Integer id) {
+		// TODO Auto-generated method stub
+		String sql = "DELETE FROM categories WHERE id = ?";
+		try {
+			return JdbcUtil.executeUpdate(sql, id);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	//Lấy danh sách loại đồ uống
+	@Override
+	public List<Category> findAll() {
+		// TODO Auto-generated method stub
+		List<Category> list = new ArrayList<Category>();
+		String sql = "SELECT * FROM categories";
+		try {
+			ResultSet resultSet = JdbcUtil.executeQuery(sql);
+			while(resultSet.next()) {
+				Integer id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				boolean active = resultSet.getBoolean("active");
+				Category category = new Category(id, name, active);
+				list.add(category);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return list;
+	}
+	//Lấy thông tin loại đồ uống theo id
+	@Override
+	public Category findById(Integer id) {
+		// TODO Auto-generated method stub
+		Category category = null;
+		String sql = "SELECT * FROM categories WHERE id = ?";
+		try {
+			ResultSet resultSet = JdbcUtil.executeQuery(sql, id);
+			while(resultSet.next()) {
+				String name = resultSet.getString("name");
+				boolean active = resultSet.getBoolean("active");
+				category = new Category(id, name, active);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return category;
+	}
+	
+	@Override
+	public List<Category> findBySql(String sql, Object... values) {
+		// TODO Auto-generated method stub
+		List<Category> list = new ArrayList<Category>();
+		try {
+			ResultSet resultSet = JdbcUtil.executeQuery(sql, values);
+			while(resultSet.next()) {
+				Integer id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				boolean active = resultSet.getBoolean("active");
+				Category category = new Category(id, name, active);
+				list.add(category);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public int countDrinkInCategory(int categoryId) {
+		int rs = 0;
+		String sql = "select count(id) as num_drink from drinks where category_id = ?";
+		try {
+			ResultSet resultSet = JdbcUtil.executeQuery(sql, categoryId);
+			
+			while(resultSet.next()) {
+				rs = resultSet.getInt("num_drink");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return rs;
+		
+	}
+}
+
