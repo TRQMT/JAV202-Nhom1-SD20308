@@ -1,12 +1,12 @@
-package main.java.com.polycoffee.dao;
+package com.polycoffee.dao;
 
 import com.polycoffee.entity.Category;
-import com.polycoffee.util.JdbcUtil;
+import com.polycoffee.utils.JdbcUtil;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;  
 
 @NoArgsConstructor
 

@@ -1,4 +1,4 @@
-package main.java.com.polycoffee.entity;
+package com.polycoffee.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
