@@ -13,7 +13,6 @@ import com.polycoffee.utils.JdbcUtil;
 public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 	DrinkDAO drinkDAO = new DrinkDAO();
 
-// 	Lấy danh sách chi tiết hóa đơn theo billId
 	public List<BillDetail> findByBillId(Integer billId) {
 		String sql = "SELECT * FROM bill_details WHERE bill_id = ?";
 		try {
@@ -24,7 +23,6 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 		return new ArrayList<BillDetail>();
 	}
 
-//	Thêm thức uống vào chi tiết hóa đơn
 	public int addDrinkToBill(Integer billId, Integer drinkId) {
 		BillDAO billDAO = new BillDAO();
 		Bill bill = billDAO.findById(billId);
@@ -52,7 +50,6 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 		return 0;
 	}
 
-//	Cập nhật số lượng của một thước uống trong chi tiết hóa đơn
 	public int updateQuantity(Integer billId, Integer drinkId, int quantity) {
 		BillDAO billDAO = new BillDAO();
 		Bill bill = billDAO.findById(billId);
