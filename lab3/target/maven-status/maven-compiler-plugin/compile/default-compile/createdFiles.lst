@@ -1,6 +1,0 @@
-com\polycoffee\dao\CrudDAO.class
-com\polycoffee\dao\DrinkDAO.class
-com\polycoffee\dao\UserDAO.class
-com\polycoffee\entity\Drink.class
-com\polycoffee\utils\JdbcUtil.class
-com\polycoffee\entity\User.class
