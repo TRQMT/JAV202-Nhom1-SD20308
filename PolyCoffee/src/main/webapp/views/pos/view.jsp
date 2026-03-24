@@ -7,13 +7,21 @@
 <title>POS - Bán hàng</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
 <style>
-    .thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 4px; }
-    .product-card { border: 1px solid #e9ecef; border-radius: 8px; padding: 10px; height: 100%; }
+    .thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; }
     .fixed-right { position: sticky; top: 20px; }
     @media (max-width: 767px) {
         .fixed-right { position: static; margin-top: 1rem; }
     }
+    .order-card { border-radius: 16px !important; box-shadow: 0 8px 32px rgba(28,16,8,.13) !important; }
+    .order-card .card-title {
+        font-family: 'Lora', serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #3b1f0a;
+    }
+    .total-row { border-top: 2px solid #ede0cc; padding-top: 10px; }
 </style>
 </head>
 <body>
@@ -95,14 +103,14 @@
 
         <div class="row">
             <div class="col-lg-8 col-md-7">
-                <h4 class="mb-3">Danh sách sản phẩm</h4>
+                <h4 class="mb-3" style="font-family:'Lora',serif;color:#3b1f0a;">Danh sách sản phẩm</h4>
                 <div class="row g-3">
                     <c:forEach items="${drinks}" var="drink">
                         <div class="col-6 col-md-4 col-lg-3">
                             <div class="product-card">
-                                <img src="${pageContext.request.contextPath}/uploads/${drink.image}" class="w-100 mb-2" style="height:120px;object-fit:cover;border-radius:6px;" alt="drink" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';">
-                                <div class="fw-semibold">${drink.name}</div>
-                                <div class="text-success mb-2">${drink.price}</div>
+                                <img src="${pageContext.request.contextPath}/uploads/${drink.image}" class="w-100 mb-2" style="height:120px;object-fit:cover;border-radius:8px;" alt="drink" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';">
+                                <div class="fw-semibold" style="font-size:13.5px;">${drink.name}</div>
+                                <div class="text-success mb-2" style="font-size:13px;">${drink.price}</div>
                                 <form action="${pageContext.request.contextPath}/employee/pos/add-item" method="post">
                                     <input type="hidden" name="drinkId" value="${drink.id}">
                                     <input type="hidden" name="billId" value="${billId}">
@@ -115,7 +123,7 @@
             </div>
 
             <div class="col-lg-4 col-md-5">
-                <div class="card fixed-right">
+                <div class="card order-card fixed-right">
                     <div class="card-body">
                         <h5 class="card-title">Đơn hàng ${bill != null ? bill.code : ''}</h5>
                         <div class="table-responsive" style="max-height:420px; overflow:auto;">
@@ -170,7 +178,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
+                            <div class="d-flex justify-content-between fw-bold fs-5 mt-2 total-row">
                                 <div>Tổng</div>
                                 <div>${bill != null ? bill.total : 0}</div>
                             </div>
@@ -195,6 +203,10 @@
             </div>
         </div>
     </main>
+
+    <footer>
+        <p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
+    </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

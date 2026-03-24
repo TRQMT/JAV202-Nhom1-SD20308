@@ -8,6 +8,7 @@
 <title>Form Nhân viên</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
@@ -124,6 +125,10 @@
             </div>
         </div>
     </main>
+
+    <footer>
+        <p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
+    </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

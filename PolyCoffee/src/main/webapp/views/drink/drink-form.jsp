@@ -9,12 +9,14 @@
 <title>Form Đồ Uống</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
 <style>
     .img-preview {
         max-width: 200px;
         max-height: 200px;
         object-fit: contain;
-        border: 1px solid #ddd;
+        border: 1px solid #ede0cc;
+        border-radius: 8px;
         padding: 4px;
         background: #fff;
     }
@@ -93,8 +95,8 @@
                         <h5 class="card-title mb-0">${drink != null && drink.id != null ? 'Sửa đồ uống' : 'Thêm đồ uống'}</h5>
                     </div>
                     <div class="card-body">
-                    <form id="drinkForm" action="${pageContext.request.contextPath}${drink != null && drink.id != null ? '/manager/drinks/edit' : '/manager/drinks/add'}" 
-                    	method="post" 
+                    <form id="drinkForm" action="${pageContext.request.contextPath}${drink != null && drink.id != null ? '/manager/drinks/edit' : '/manager/drinks/add'}"
+                    	method="post"
                     	enctype="multipart/form-data">
 
 						<c:if test="${drink != null && drink.id != null}">
@@ -152,6 +154,10 @@
             </div>
         </div>
     </main>
+
+    <footer>
+        <p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
+    </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

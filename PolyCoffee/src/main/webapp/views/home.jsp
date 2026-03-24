@@ -11,6 +11,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
 </head>
 <body>
 	<div class="container">
@@ -61,7 +62,7 @@
 									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/dang-nhap">Đăng nhập</a></li>
 									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/quen-mat-khau">Quên mật khẩu</a></li>
 								</c:if>
-								
+
 								<c:if test="${sessionScope.user!= null}">
 									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/edit-profile">Thông tin cá nhân</a></li>
 									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/change-pass">Đổi mật khẩu</a></li>
@@ -70,18 +71,18 @@
 								</c:if>
 							</ul>
 						</li>
-						
+
 					</ul>
-				
+
 				</div>
 			</div>
 		</nav>
 		<main>
 			<div class="clearfix mt-5"></div>
-			
+
 		</main>
 		<footer>
-		
+			<p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
 		</footer>
 	</div>
 </body>
