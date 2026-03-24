@@ -1,133 +1,184 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
-<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Đăng nhập</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poly Coffee — Đăng nhập</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+<!-- Your CSS -->
 <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
+
 <style>
-  .login-split {
-    min-height: calc(100vh - 160px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0;
-  }
-  .login-card {
-    width: 100%;
-    max-width: 420px;
-    border-radius: 20px !important;
-    box-shadow: 0 20px 60px rgba(28,16,8,.14) !important;
-    overflow: hidden;
-  }
-  .login-card-top {
-    background: linear-gradient(135deg, #3b1f0a 0%, #6b3317 100%);
-    padding: 32px 28px 24px;
-    text-align: center;
-  }
-  .login-card-top h3 {
-    font-family: 'Lora', serif !important;
-    color: #fff !important;
-    font-size: 22px !important;
-    margin: 0 !important;
-    font-weight: 700 !important;
-  }
-  .login-card-top p {
-    color: rgba(255,255,255,.6);
-    font-size: 13px;
-    margin: 4px 0 0;
-  }
+.material-symbols-outlined {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.header-title {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.navbar {
+    background: #1a0a00 !important;
+}
 </style>
+
 </head>
+
 <body>
-	<div class="container">
-		<header>
-			<h1>
-				<img alt="" src="${pageContext.request.contextPath}/images/logo.png" width="150">
-			</h1>
-			<hr>
-		</header>
 
-		<nav class="navbar navbar-expand-lg bg-body-tertiary">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#"></a>
-				<button class="navbar-toggler" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-					aria-controls="navbarSupportedContent" aria-expanded="false"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="${pageContext.request.contextPath}/trang-chu">Trang chủ</a>
-						</li>
+<!-- HEADER -->
+<header class="text-center py-3" style="background: linear-gradient(135deg,#3b1f0a,#6b3317);">
+    <h1 class="header-title">WELCOME TO MY COFFEE</h1>
+</header>
 
-						<li class="nav-item dropdown">
-							<a	class="nav-link dropdown-toggle active"  href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> ${sessionScope.user!= null? sessionScope.user.fullName :"Tài Khoản"} </a>
-							<ul class="dropdown-menu">
-								<c:if test="${sessionScope.user== null}">
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/dang-nhap">Đăng nhập</a></li>
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/dang-ky">Đăng ký</a></li>
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/quen-mat-khau">Quên mật khẩu</a></li>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4">
 
-								</c:if>
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-								<c:if test="${sessionScope.user!= null}">
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/edit-profile">Thông tin cá nhân</a></li>
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/change-pass">Đổi mật khẩu</a></li>
-									<li><hr class="dropdown-divider"></li>
-									<li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
-								</c:if>
-							</ul>
-						</li>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto">
 
-					</ul>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/trang-chu">
+                        <span class="material-symbols-outlined">home</span>
+                        Trang chủ
+                    </a>
+                </li>
 
-				</div>
-			</div>
-		</nav>
-		<main>
-			<div class="clearfix mt-5"></div>
-			<div class="login-split">
-				<div class="login-card card">
-					<div class="login-card-top">
-						<h3>ĐĂNG NHẬP</h3>
-						<p>Hệ thống quản lý Poly Coffee</p>
-					</div>
-					<div class="card-body" style="padding: 28px !important;">
-						<label class="text-danger">${message }</label>
-						<form action="${pageContext.request.contextPath}/dang-nhap" method="post">
-							<div class="mb-3">
-							  <label for="email" class="form-label">Email: </label>
-							  <input type="email" class="form-control" id="email" name="email" placeholder="example@gmail.com" >
-							</div>
-							<div class="mb-3">
-							  <label for="password" class="form-label">Mật khẩu: </label>
-							  <input type="password" class="form-control" id="password" name=password placeholder="Mật khẩu" >
-							</div>
-							<div class="mb-3 text-center">
-								<button class="btn btn-primary w-100"><i class="fa fa-sign-in" aria-hidden="true"></i> Đăng nhập</button>
-							</div>
-							<div class="mb-3">
-								<a href="${pageContext.request.contextPath}/quen-mat-khau" style="color:var(--c-caramel);font-size:13px"> Quên mật khẩu?</a>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#"
+                       role="button" data-bs-toggle="dropdown">
 
-		</main>
-		<footer>
-			<p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
-		</footer>
-	</div>
+                        <span class="material-symbols-outlined">account_circle</span>
+
+                        ${sessionScope.user != null ? sessionScope.user.fullName : "Tài khoản"}
+                    </a>
+
+                    <ul class="dropdown-menu">
+
+                        <c:if test="${sessionScope.user == null}">
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/dang-nhap">
+                                    <span class="material-symbols-outlined">login</span>
+                                    Đăng nhập
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/quen-mat-khau">
+                                    <span class="material-symbols-outlined">lock_reset</span>
+                                    Quên mật khẩu
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <c:if test="${sessionScope.user != null}">
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/edit-profile">
+                                    <span class="material-symbols-outlined">person</span>
+                                    Thông tin cá nhân
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/logout">
+                                    <span class="material-symbols-outlined">logout</span>
+                                    Đăng xuất
+                                </a>
+                            </li>
+                        </c:if>
+
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+    <div class="login-split">
+        <div class="login-card card">
+
+            <!-- TOP -->
+            <div class="login-card-top">
+                <h3>ĐĂNG NHẬP</h3>
+                <p>Hệ thống quản lý Poly Coffee</p>
+            </div>
+
+            <!-- FORM -->
+            <div class="card-body" style="padding:32px !important;">
+
+                <c:if test="${not empty message}">
+                    <div class="alert alert-danger mb-3">${message}</div>
+                </c:if>
+
+                <form action="${pageContext.request.contextPath}/dang-nhap" method="post">
+
+                    <!-- EMAIL -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control"
+                               name="email" placeholder="example@gmail.com" required>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control"
+                               name="password" placeholder="Nhập mật khẩu" required>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary w-100" style="padding:10px;">
+                            <span class="material-symbols-outlined">login</span>
+                            Đăng nhập
+                        </button>
+                    </div>
+
+                    <!-- FORGOT -->
+                    <div class="text-center">
+                        <a href="${pageContext.request.contextPath}/quen-mat-khau"
+                           style="color:var(--caramel);font-size:13.5px;">
+                            <span class="material-symbols-outlined">lock_reset</span>
+                            Quên mật khẩu?
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

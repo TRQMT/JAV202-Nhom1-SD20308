@@ -1,214 +1,239 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>POS - Bán hàng</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Poly Coffee — POS</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
 <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
+
 <style>
-    .thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; }
-    .fixed-right { position: sticky; top: 20px; }
-    @media (max-width: 767px) {
-        .fixed-right { position: static; margin-top: 1rem; }
-    }
-    .order-card { border-radius: 16px !important; box-shadow: 0 8px 32px rgba(28,16,8,.13) !important; }
-    .order-card .card-title {
-        font-family: 'Lora', serif;
-        font-size: 16px;
-        font-weight: 700;
-        color: #3b1f0a;
-    }
-    .total-row { border-top: 2px solid #ede0cc; padding-top: 10px; }
+.material-symbols-outlined {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+.header-title {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+.navbar { background: #1a0a00 !important; }
+
+.product-card img {
+    border-radius: 8px;
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+}
+
+.order-card {
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.fixed-right { position: sticky; top: 20px; }
+@media (max-width: 767px) {
+    .fixed-right { position: static; }
+}
 </style>
+
 </head>
+
 <body>
-<div class="container">
-    <header>
-        <h1>
-            <img alt="" src="${pageContext.request.contextPath}/images/logo.png" width="150">
-        </h1>
-        <hr>
-    </header>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/trang-chu">Trang chủ</a></li>
-                    <c:if test="${sessionScope.user != null}">
-                        <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/employee/pos">Phiếu bán hàng</a></li>
-                        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/manager/categories">Quản lý loại đồ uống</a></li>
-                        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/manager/drinks">Quản lý đồ uống</a></li>
-                        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/bills">Quản lý hóa đơn</a></li>
-                        <c:if test="${sessionScope.user.role}">
-                            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">Quản lý nhân viên</a></li>
-                        </c:if>
-                    </c:if>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            ${sessionScope.user != null ? sessionScope.user.fullName : "Tài Khoản"}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <c:if test="${sessionScope.user == null}">
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/dang-nhap">Đăng nhập</a></li>
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/quen-mat-khau">Quên mật khẩu</a></li>
-                            </c:if>
-                            <c:if test="${sessionScope.user != null}">
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/edit-profile">Thông tin cá nhân</a></li>
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/change-pass">Đổi mật khẩu</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
-                            </c:if>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<!-- HEADER -->
+<header class="text-center py-3" style="background: linear-gradient(135deg,#3b1f0a,#6b3317);">
+    <h1 class="header-title">WELCOME TO MY COFFEE</h1>
+</header>
 
-    <main class="mt-4">
-        <c:if test="${param.message == 'paid-cash'}">
-            <div class="alert alert-success">Thanh toán tiền mặt thành công.</div>
-        </c:if>
-        <c:if test="${param.message == 'vnpay-success'}">
-            <div class="alert alert-success">Thanh toán VNPAY thành công.</div>
-        </c:if>
-        <c:if test="${param.message == 'vnpay-failed'}">
-            <div class="alert alert-danger">Thanh toán VNPAY thất bại hoặc chữ ký không hợp lệ.</div>
-        </c:if>
-        <c:if test="${param.message == 'add-item-failed'}">
-            <div class="alert alert-danger">Không thể thêm món vào đơn hàng. Vui lòng thử lại.</div>
-        </c:if>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container-fluid px-4">
 
-        <c:if test="${not empty waitingBills}">
-            <div class="mb-3 d-flex flex-wrap gap-2">
-                <span class="fw-semibold">Đơn chờ:</span>
-                <c:forEach items="${waitingBills}" var="waiting">
-                    <a class="btn btn-sm ${billId == waiting.id ? 'btn-primary' : 'btn-outline-primary'}"
-                       href="${pageContext.request.contextPath}/employee/pos?billId=${waiting.id}">
-                        ${waiting.code}
-                    </a>
-                </c:forEach>
-                <a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/employee/pos">Đơn mới</a>
-            </div>
-        </c:if>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+    <span class="navbar-toggler-icon"></span>
+</button>
 
-        <div class="row">
-            <div class="col-lg-8 col-md-7">
-                <h4 class="mb-3" style="font-family:'Lora',serif;color:#3b1f0a;">Danh sách sản phẩm</h4>
-                <div class="row g-3">
-                    <c:forEach items="${drinks}" var="drink">
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product-card">
-                                <img src="${pageContext.request.contextPath}/uploads/${drink.image}" class="w-100 mb-2" style="height:120px;object-fit:cover;border-radius:8px;" alt="drink" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';">
-                                <div class="fw-semibold" style="font-size:13.5px;">${drink.name}</div>
-                                <div class="text-success mb-2" style="font-size:13px;">${drink.price}</div>
-                                <form action="${pageContext.request.contextPath}/employee/pos/add-item" method="post">
-                                    <input type="hidden" name="drinkId" value="${drink.id}">
-                                    <input type="hidden" name="billId" value="${billId}">
-                                    <button class="btn btn-sm btn-primary w-100">Thêm</button>
-                                </form>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
+<div class="collapse navbar-collapse" id="navbarMain">
 
-            <div class="col-lg-4 col-md-5">
-                <div class="card order-card fixed-right">
-                    <div class="card-body">
-                        <h5 class="card-title">Đơn hàng ${bill != null ? bill.code : ''}</h5>
-                        <div class="table-responsive" style="max-height:420px; overflow:auto;">
-                            <table class="table table-sm align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Tên</th>
-                                        <th class="text-center">SL</th>
-                                        <th class="text-end">Thành tiền</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${billDetails}" var="detail">
-                                        <tr>
-                                            <td>${detailDrinkMap[detail.drinkId].name}</td>
-                                            <td class="text-center">
-                                                <div class="d-flex justify-content-center gap-1">
-                                                    <form action="${pageContext.request.contextPath}/employee/pos/update-quantity" method="post">
-                                                        <input type="hidden" name="billId" value="${bill.id}">
-                                                        <input type="hidden" name="billDetailId" value="${detail.id}">
-                                                        <input type="hidden" name="action" value="decrease">
-                                                        <button class="btn btn-sm btn-outline-secondary">-</button>
-                                                    </form>
-                                                    <span class="px-2">${detail.quantity}</span>
-                                                    <form action="${pageContext.request.contextPath}/employee/pos/update-quantity" method="post">
-                                                        <input type="hidden" name="billId" value="${bill.id}">
-                                                        <input type="hidden" name="billDetailId" value="${detail.id}">
-                                                        <input type="hidden" name="action" value="increase">
-                                                        <button class="btn btn-sm btn-outline-secondary">+</button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                            <td class="text-end">${detail.price * detail.quantity}</td>
-                                            <td>
-                                                <form action="${pageContext.request.contextPath}/employee/pos/update-quantity" method="post">
-                                                    <input type="hidden" name="billId" value="${bill.id}">
-                                                    <input type="hidden" name="billDetailId" value="${detail.id}">
-                                                    <input type="hidden" name="action" value="remove">
-                                                    <button class="btn btn-sm btn-light text-danger">X</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                    <c:if test="${empty billDetails}">
-                                        <tr>
-                                            <td colspan="4" class="text-center text-muted">Chưa có sản phẩm</td>
-                                        </tr>
-                                    </c:if>
-                                </tbody>
-                            </table>
-                        </div>
+<ul class="navbar-nav me-auto">
 
-                        <div class="mt-3">
-                            <div class="d-flex justify-content-between fw-bold fs-5 mt-2 total-row">
-                                <div>Tổng</div>
-                                <div>${bill != null ? bill.total : 0}</div>
-                            </div>
-                        </div>
+<li class="nav-item">
+<a class="nav-link" href="${pageContext.request.contextPath}/trang-chu">
+<span class="material-symbols-outlined">home</span>Trang chủ
+</a>
+</li>
 
-                        <div class="d-flex gap-2 mt-3">
-                            <form class="w-100" action="${pageContext.request.contextPath}/employee/pos/checkout" method="post">
-                                <input type="hidden" name="billId" value="${bill.id}">
-                                <select class="form-select form-select-sm mb-2" name="paymentMethod">
-                                    <option value="cash">Tiền mặt</option>
-                                    <option value="transfer">Chuyển khoản / Quét QR (VNPAY)</option>
-                                </select>
-                                <button class="btn btn-success w-100" ${bill == null || empty billDetails ? 'disabled' : ''}>Hoàn thành đơn</button>
-                            </form>
-                            <form class="w-100" action="${pageContext.request.contextPath}/employee/pos/cancel" method="post">
-                                <input type="hidden" name="billId" value="${bill.id}">
-                                <button class="btn btn-outline-danger w-100" ${bill == null ? 'disabled' : ''}>Hủy đơn</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+<li class="nav-item">
+<a class="nav-link active" href="${pageContext.request.contextPath}/employee/pos">
+<span class="material-symbols-outlined">point_of_sale</span>POS
+</a>
+</li>
 
-    <footer>
-        <p>© 2025 Poly Coffee &nbsp;·&nbsp; FPT Polytechnic</p>
-    </footer>
+<li class="nav-item">
+<a class="nav-link" href="${pageContext.request.contextPath}/manager/categories">
+<span class="material-symbols-outlined">category</span>Loại đồ uống
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="${pageContext.request.contextPath}/manager/drinks">
+<span class="material-symbols-outlined">coffee</span>Đồ uống
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="${pageContext.request.contextPath}/bills">
+<span class="material-symbols-outlined">receipt_long</span>Hóa đơn
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
+<span class="material-symbols-outlined">groups</span>Nhân viên
+</a>
+</li>
+
+</ul>
+
+<ul class="navbar-nav">
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+<span class="material-symbols-outlined">account_circle</span>
+${sessionScope.user != null ? sessionScope.user.fullName : "Tài khoản"}
+</a>
+
+<ul class="dropdown-menu dropdown-menu-end">
+<c:if test="${sessionScope.user == null}">
+<li><a class="dropdown-item" href="${pageContext.request.contextPath}/dang-nhap">
+<span class="material-symbols-outlined">login</span>Đăng nhập
+</a></li>
+</c:if>
+
+<c:if test="${sessionScope.user != null}">
+<li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
+<span class="material-symbols-outlined">logout</span>Đăng xuất
+</a></li>
+</c:if>
+</ul>
+
+</li>
+</ul>
+
+</div>
+</div>
+</nav>
+
+<!-- MAIN -->
+<main class="container mt-4">
+
+<!-- PRODUCTS -->
+<div class="row g-4">
+
+<div class="col-lg-8">
+<h4 class="mb-3">
+<span class="material-symbols-outlined">coffee</span>
+Danh sách sản phẩm
+</h4>
+
+<div class="row g-3">
+<c:forEach items="${drinks}" var="drink">
+<div class="col-6 col-md-4 col-lg-3">
+
+<div class="product-card">
+<img src="${pageContext.request.contextPath}/uploads/${drink.image}"
+onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';">
+
+<div style="font-weight:600;font-size:13px;margin-top:6px;">
+${drink.name}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<div style="color:var(--caramel);font-weight:600;">
+${drink.price} đ
+</div>
+
+<form action="${pageContext.request.contextPath}/employee/pos/add-item" method="post">
+<input type="hidden" name="drinkId" value="${drink.id}">
+<input type="hidden" name="billId" value="${billId}">
+<button class="btn btn-sm btn-primary w-100 mt-1">
+<span class="material-symbols-outlined">add</span>Thêm
+</button>
+</form>
+
+</div>
+
+</div>
+</c:forEach>
+</div>
+</div>
+
+<!-- ORDER -->
+<div class="col-lg-4">
+
+<div class="card order-card fixed-right">
+<div class="card-body">
+
+<h5>
+<span class="material-symbols-outlined">receipt</span>
+Đơn hàng ${bill != null ? bill.code : ''}
+</h5>
+
+<table class="table table-sm">
+<tbody>
+
+<c:forEach items="${billDetails}" var="d">
+<tr>
+<td>${detailDrinkMap[d.drinkId].name}</td>
+<td>x${d.quantity}</td>
+<td>${d.price * d.quantity}</td>
+</tr>
+</c:forEach>
+
+<c:if test="${empty billDetails}">
+<tr><td class="text-muted">Chưa có sản phẩm</td></tr>
+</c:if>
+
+</tbody>
+</table>
+
+<h5 class="text-end">
+Tổng: ${bill != null ? bill.total : 0} đ
+</h5>
+
+<form action="${pageContext.request.contextPath}/employee/pos/checkout" method="post">
+<input type="hidden" name="billId" value="${bill.id}">
+<button class="btn btn-success w-100"
+${bill == null || empty billDetails ? 'disabled' : ''}>
+<span class="material-symbols-outlined">payments</span>
+Thanh toán
+</button>
+</form>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
