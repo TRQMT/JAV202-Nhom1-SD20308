@@ -50,7 +50,7 @@ public class VnpayInitServlet extends HttpServlet {
         String vnpCommand = "pay";
         String orderType = "other";
         long amount = (long) bill.getTotal() * 100L;
-        String vnpTxnRef = String.valueOf(bill.getId());
+        String vnpTxnRef = bill.getId() + "_" + System.currentTimeMillis();
         String vnpIpAddr = VnpayConfig.getIpAddress(req);
 
         String returnUrl = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
@@ -69,8 +69,10 @@ public class VnpayInitServlet extends HttpServlet {
         vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_IpAddr", vnpIpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        TimeZone vnTimeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+        Calendar cld = Calendar.getInstance(vnTimeZone);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(vnTimeZone);
         vnpParams.put("vnp_CreateDate", formatter.format(cld.getTime()));
 
         cld.add(Calendar.MINUTE, 15);

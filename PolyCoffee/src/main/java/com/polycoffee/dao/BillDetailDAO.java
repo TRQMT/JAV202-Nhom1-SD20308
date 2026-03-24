@@ -14,7 +14,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 
 // 	Lấy danh sách chi tiết hóa đơn theo billId
 	public List<BillDetail> findByBillId(Integer billId) {
-		String sql = "SELECT * FROM bill_details WHERE bill_id = ?";
+		String sql = "SELECT MaCTHD AS id, MaHD AS bill_id, MaDoUong AS drink_id, soLuong AS quantity, donGia AS price FROM CHITIETHOADON WHERE MaHD = ?";
 		try {
 			return this.findBySql(sql, billId);
 		} catch (Exception e) {
@@ -30,7 +30,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 		if (bill == null || !bill.getStatus().equals(BillDAO.STATUS_WAITING)) {
 			return 0;
 		}
-		String sqlCheck = "SELECT * FROM bill_details WHERE bill_id = ? AND drink_id = ?";
+		String sqlCheck = "SELECT MaCTHD AS id, MaHD AS bill_id, MaDoUong AS drink_id, soLuong AS quantity, donGia AS price FROM CHITIETHOADON WHERE MaHD = ? AND MaDoUong = ?";
 		try {
 			List<BillDetail> list = this.findBySql(sqlCheck, billId, drinkId);
 			if (list.size() > 0) {
@@ -38,7 +38,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 				return this.updateQuantity(billId, drinkId, billDetail.getQuantity() + 1);
 			} else {
 				Drink drink = drinkDAO.findById(drinkId);
-				String sqlInsert = "INSERT INTO bill_details(bill_id, drink_id, quantity, price) VALUES(?, ?, ?, ?)";
+				String sqlInsert = "INSERT INTO CHITIETHOADON(MaHD, MaDoUong, soLuong, donGia) VALUES(?, ?, ?, ?)";
 				int rs = JdbcUtil.executeUpdate(sqlInsert, billId, drinkId, 1, drink.getPrice());
 				if (rs > 0) {
 					billDAO.updateTotal(billId);
@@ -57,7 +57,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 		Bill bill = billDAO.findById(billId);
 		if (bill != null && bill.getStatus().equals(BillDAO.STATUS_WAITING)) {
 			if (quantity <= 0) {
-				String sql = "DELETE FROM bill_details WHERE bill_id = ? AND drink_id = ?";
+				String sql = "DELETE FROM CHITIETHOADON WHERE MaHD = ? AND MaDoUong = ?";
 				try {
 					int rs = JdbcUtil.executeUpdate(sql, billId, drinkId);
 					if (rs > 0) {
@@ -68,7 +68,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 					e.printStackTrace();
 				}
 			} else {
-				String sql = "UPDATE bill_details SET quantity = ? WHERE bill_id = ? AND drink_id = ?";
+				String sql = "UPDATE CHITIETHOADON SET soLuong = ? WHERE MaHD = ? AND MaDoUong = ?";
 				try {
 					int rs = JdbcUtil.executeUpdate(sql, quantity, billId, drinkId);
 					if (rs > 0) {
@@ -85,7 +85,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 
 	@Override
 	public int create(BillDetail entity) {
-		String sql = "INSERT INTO bill_details(bill_id, drink_id, quantity, price) values(?, ?, ?, ?)";
+		String sql = "INSERT INTO CHITIETHOADON(MaHD, MaDoUong, soLuong, donGia) values(?, ?, ?, ?)";
 		try {
 			int rs = JdbcUtil.executeUpdate(sql, entity.getBillId(), entity.getDrinkId(), entity.getQuantity(),
 					entity.getPrice());
@@ -101,7 +101,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 
 	@Override
 	public int update(BillDetail entity) {
-		String sql = "UPDATE bill_details SET bill_id = ?, drink_id = ?, quantity = ?, price = ? WHERE id = ?";
+		String sql = "UPDATE CHITIETHOADON SET MaHD = ?, MaDoUong = ?, soLuong = ?, donGia = ? WHERE MaCTHD = ?";
 		try {
 			BillDetail currentBillDetail = this.findById(entity.getId());
 			int rs = JdbcUtil.executeUpdate(sql, entity.getBillId(), entity.getDrinkId(), entity.getQuantity(),
@@ -122,7 +122,7 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 
 	@Override
 	public int delete(Integer id) {
-		String sql = "DELETE FROM bill_details WHERE id = ?";
+		String sql = "DELETE FROM CHITIETHOADON WHERE MaCTHD = ?";
 		try {
 			BillDetail billDetail = this.findById(id);
 			int rs = JdbcUtil.executeUpdate(sql, id);
@@ -138,12 +138,12 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 
 	@Override
 	public List<BillDetail> findAll() {
-		return this.findBySql("SELECT * FROM bill_details");
+		return this.findBySql("SELECT MaCTHD AS id, MaHD AS bill_id, MaDoUong AS drink_id, soLuong AS quantity, donGia AS price FROM CHITIETHOADON");
 	}
 
 	@Override
 	public BillDetail findById(Integer id) {
-		String sql = "SELECT * FROM bill_details WHERE id = ?";
+		String sql = "SELECT MaCTHD AS id, MaHD AS bill_id, MaDoUong AS drink_id, soLuong AS quantity, donGia AS price FROM CHITIETHOADON WHERE MaCTHD = ?";
 		List<BillDetail> billDetails = this.findBySql(sql, id);
 		return billDetails.isEmpty() ? null : billDetails.get(0);
 	}

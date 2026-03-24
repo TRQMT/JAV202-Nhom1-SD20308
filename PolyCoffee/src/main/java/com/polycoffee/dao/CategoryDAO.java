@@ -12,9 +12,9 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	@Override
 	public int create(Category entity) {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO categories(name, active) values (?, ?)";
+		String sql = "INSERT INTO LOAIDOUONG(tenLoai, hinhAnh, trangThai, moTa) values (?, ?, ?, ?)";
 		try {
-			return JdbcUtil.executeUpdate(sql, entity.getName(), entity.isActive());
+			return JdbcUtil.executeUpdate(sql, entity.getName(), "default.jpg", entity.isActive(), "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -25,7 +25,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	@Override
 	public int update(Category entity) {
 		// TODO Auto-generated method stub
-		String sql = "UPDATE categories SET name = ?, active = ? WHERE id = ?";
+		String sql = "UPDATE LOAIDOUONG SET tenLoai = ?, trangThai = ? WHERE maLoai = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getName(), entity.isActive(), entity.getId());
 		} catch (Exception e) {
@@ -38,7 +38,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	@Override
 	public int delete(Integer id) {
 		// TODO Auto-generated method stub
-		String sql = "DELETE FROM categories WHERE id = ?";
+		String sql = "DELETE FROM LOAIDOUONG WHERE maLoai = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, id);
 		} catch (Exception e) {
@@ -52,7 +52,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	public List<Category> findAll() {
 		// TODO Auto-generated method stub
 		List<Category> list = new ArrayList<Category>();
-		String sql = "SELECT * FROM categories";
+		String sql = "SELECT maLoai AS id, tenLoai AS name, trangThai AS active FROM LOAIDOUONG";
 		try {
 			ResultSet resultSet = JdbcUtil.executeQuery(sql);
 			while(resultSet.next()) {
@@ -73,7 +73,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	public Category findById(Integer id) {
 		// TODO Auto-generated method stub
 		Category category = null;
-		String sql = "SELECT * FROM categories WHERE id = ?";
+		String sql = "SELECT maLoai AS id, tenLoai AS name, trangThai AS active FROM LOAIDOUONG WHERE maLoai = ?";
 		try {
 			ResultSet resultSet = JdbcUtil.executeQuery(sql, id);
 			while(resultSet.next()) {
@@ -109,7 +109,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	}
 	public int countDrinkInCategory(int categoryId) {
 		int rs = 0;
-		String sql = "select count(id) as num_drink from drinks where category_id = ?";
+		String sql = "select count(MaDoUong) as num_drink from DOUONG where maLoai = ?";
 		try {
 			ResultSet resultSet = JdbcUtil.executeQuery(sql, categoryId);
 			

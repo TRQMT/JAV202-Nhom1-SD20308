@@ -9,7 +9,7 @@ import java.sql.Types;
 
 public class JdbcUtil {
 	static String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	static String dburl = "jdbc:sqlserver://localhost:1433;database=polycoffee;encrypt=false";
+	static String dburl = "jdbc:sqlserver://localhost:1433;database=MyCafe;encrypt=false";
 	static String username = "sa";
 	static String password = "123";
 	// nạp driver

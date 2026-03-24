@@ -11,7 +11,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 
 	@Override
 	public int create(Drink entity) {
-		String sql = "INSERT INTO drinks(category_id, name, description, image, price, active) values (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO DOUONG(maLoai, tenDoUong, moTa, hinhAnh, donGia, trangThai) values (?, ?, ?, ?, ?, ?)";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getCategoryId(), entity.getName(), entity.getDescription(),
 					entity.getImage(), entity.getPrice(), entity.isActive());
@@ -23,7 +23,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 
 	@Override
 	public int update(Drink entity) {
-		String sql = "UPDATE drinks SET category_id = ?, name = ?, description = ?, image = ?, price = ?, active = ? WHERE id = ?";
+		String sql = "UPDATE DOUONG SET maLoai = ?, tenDoUong = ?, moTa = ?, hinhAnh = ?, donGia = ?, trangThai = ? WHERE MaDoUong = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getCategoryId(), entity.getName(), entity.getDescription(),
 					entity.getImage(), entity.getPrice(), entity.isActive(), entity.getId());
@@ -35,7 +35,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 
 	@Override
 	public int delete(Integer id) {
-		String sql = "DELETE FROM drinks WHERE id = ?";
+		String sql = "DELETE FROM DOUONG WHERE MaDoUong = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, id);
 		} catch (Exception e) {
@@ -45,7 +45,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 	}
 
 	public int countInBillDetails(Integer drinkId) {
-		String sql = "SELECT COUNT(id) AS total FROM bill_details WHERE drink_id = ?";
+		String sql = "SELECT COUNT(MaCTHD) AS total FROM CHITIETHOADON WHERE MaDoUong = ?";
 		try {
 			ResultSet rs = JdbcUtil.executeQuery(sql, drinkId);
 			if (rs.next()) {
@@ -60,7 +60,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 	@Override
 	public List<Drink> findAll() {
 		List<Drink> list = new ArrayList<Drink>();
-		String sql = "SELECT * FROM drinks";
+		String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG";
 		try {
 			ResultSet rs = JdbcUtil.executeQuery(sql);
 			while (rs.next()) {
@@ -83,7 +83,7 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 	@Override
 	public Drink findById(Integer id) {
 		Drink d = null;
-		String sql = "SELECT * FROM drinks WHERE id = ?";
+		String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG WHERE MaDoUong = ?";
 		try {
 			ResultSet rs = JdbcUtil.executeQuery(sql, id);
 			while (rs.next()) {

@@ -62,8 +62,15 @@ public class VnpayReturnServlet extends HttpServlet {
         String txRef = request.getParameter("vnp_TxnRef");
         String transactionNo = request.getParameter("vnp_TransactionNo");
 
-        if (txRef != null && txRef.matches("\\d+") && signValue.equals(secureHash)) {
-            int billId = Integer.parseInt(txRef);
+        Integer billId = null;
+        if (txRef != null) {
+            String[] parts = txRef.split("_", 2);
+            if (parts.length > 0 && parts[0].matches("\\d+")) {
+                billId = Integer.parseInt(parts[0]);
+            }
+        }
+
+        if (billId != null && signValue.equals(secureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 billDAO.updateAfterVnpaySuccess(billId, transactionNo, txRef);
                 transResult = true;

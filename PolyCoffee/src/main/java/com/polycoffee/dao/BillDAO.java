@@ -11,12 +11,14 @@ import com.polycoffee.entity.BillDetail;
 import com.polycoffee.util.JdbcUtil;
 
 public class BillDAO implements CrudDAO<Bill, Integer> {
+	private static final int DEFAULT_CUSTOMER_ID = 1;
+	private static final String SELECT_BILL_BASE = "SELECT MaHD AS id, MaNV AS user_id, CONCAT('HD', MaHD) AS code, ngayTao AS created_at, tongTien AS total, trangThai AS status FROM HOADON";
 
 	@Override
 	public int create(Bill entity) {
-		String sql = "INSERT INTO bills(user_id, code, created_at, total, status) values (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO HOADON(MaNV, MaKH, ngayTao, tongTien, trangThai) values (?, ?, ?, ?, ?)";
 		try {
-			return JdbcUtil.executeUpdate(sql, entity.getUserId(), entity.getCode(), entity.getCreatedAt(),
+			return JdbcUtil.executeUpdate(sql, entity.getUserId(), DEFAULT_CUSTOMER_ID, entity.getCreatedAt(),
 					entity.getTotal(), entity.getStatus());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,9 +28,9 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 	@Override
 	public int update(Bill entity) {
-		String sql = "UPDATE bills SET user_id = ?, code = ?, created_at = ?, total = ?, status = ? WHERE id = ?";
+		String sql = "UPDATE HOADON SET MaNV = ?, ngayTao = ?, tongTien = ?, trangThai = ? WHERE MaHD = ?";
 		try {
-			return JdbcUtil.executeUpdate(sql, entity.getUserId(), entity.getCode(), entity.getCreatedAt(),
+			return JdbcUtil.executeUpdate(sql, entity.getUserId(), entity.getCreatedAt(),
 					entity.getTotal(), entity.getStatus(), entity.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,8 +40,8 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 	@Override
 	public int delete(Integer id) {
-		String sqlDeleteBillDetails = "DELETE FROM bill_details WHERE bill_id = ?";
-		String sqlDeleteBill = "DELETE FROM bills WHERE id = ?";
+		String sqlDeleteBillDetails = "DELETE FROM CHITIETHOADON WHERE MaHD = ?";
+		String sqlDeleteBill = "DELETE FROM HOADON WHERE MaHD = ?";
 		try {
 			JdbcUtil.executeUpdate(sqlDeleteBillDetails, id);
 			return JdbcUtil.executeUpdate(sqlDeleteBill, id);
@@ -51,12 +53,12 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 	@Override
 	public List<Bill> findAll() {
-		return this.findBySql("SELECT * FROM bills");
+		return this.findBySql(SELECT_BILL_BASE);
 	}
 
 	@Override
 	public Bill findById(Integer id) {
-		String sql = "SELECT * FROM bills WHERE id = ?";
+		String sql = SELECT_BILL_BASE + " WHERE MaHD = ?";
 		List<Bill> bills = this.findBySql(sql, id);
 		return bills.isEmpty() ? null : bills.get(0);
 	}
@@ -111,7 +113,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	public static final String STATUS_CANCEL = "cancel";
 
 	public Bill findByIdAndUserId(Integer id, Integer userId) {
-		String sql = "SELECT * FROM bills WHERE id = ? AND user_id = ?";
+		String sql = SELECT_BILL_BASE + " WHERE MaHD = ? AND MaNV = ?";
 		try {
 			List<Bill> bills = this.findBySql(sql, id, userId);
 			if (!bills.isEmpty()) {
@@ -125,9 +127,9 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 //	Tạo hóa đơn cùng với chi tiết hóa đơn
 	public int createWithBillDetails(Bill bill, List<BillDetail> billDetails) {
-		String sqlBill = "INSERT INTO bills(user_id, code, created_at, total, status) OUTPUT INSERTED.ID values (?, ?, ?, ?, ?)";
+		String sqlBill = "INSERT INTO HOADON(MaNV, MaKH, ngayTao, tongTien, trangThai) OUTPUT INSERTED.MaHD values (?, ?, ?, ?, ?)";
 		try {
-			PreparedStatement stmt = JdbcUtil.createPreStmt(sqlBill, bill.getUserId(), bill.getCode(),
+			PreparedStatement stmt = JdbcUtil.createPreStmt(sqlBill, bill.getUserId(), DEFAULT_CUSTOMER_ID,
 					bill.getCreatedAt(), bill.getTotal(), bill.getStatus());
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -142,12 +144,12 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 			}
 		} catch (Exception e) {
 			try {
-				String fallbackInsert = "INSERT INTO bills(user_id, code, created_at, total, status) values (?, ?, ?, ?, ?)";
-				JdbcUtil.executeUpdate(fallbackInsert, bill.getUserId(), bill.getCode(), bill.getCreatedAt(), bill.getTotal(),
+				String fallbackInsert = "INSERT INTO HOADON(MaNV, MaKH, ngayTao, tongTien, trangThai) values (?, ?, ?, ?, ?)";
+				JdbcUtil.executeUpdate(fallbackInsert, bill.getUserId(), DEFAULT_CUSTOMER_ID, bill.getCreatedAt(), bill.getTotal(),
 						bill.getStatus());
-				ResultSet scopeRs = JdbcUtil.executeQuery("SELECT CAST(SCOPE_IDENTITY() AS INT) AS id");
+				ResultSet scopeRs = JdbcUtil.executeQuery("SELECT CAST(SCOPE_IDENTITY() AS INT) AS MaHD");
 				if (scopeRs.next()) {
-					int billId = scopeRs.getInt("id");
+					int billId = scopeRs.getInt("MaHD");
 					if (billId > 0) {
 						BillDetailDAO billDetailDAO = new BillDetailDAO();
 						for (BillDetail billDetail : billDetails) {
@@ -173,7 +175,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 		}
 		if (bill.getStatus().equals(STATUS_WAITING)) {
 			if (status.equals(STATUS_FINISH) || status.equals(STATUS_CANCEL)) {
-				String sql = "UPDATE bills SET status = ? WHERE id = ?";
+				String sql = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
 				try {
 					return JdbcUtil.executeUpdate(sql, status, billId);
 				} catch (Exception e) {
@@ -182,7 +184,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 			}
 		} else if (bill.getStatus().equals(STATUS_FINISH)) {
 			if (status.equals(STATUS_CANCEL)) {
-				String sql = "UPDATE bills SET status = ? WHERE id = ?";
+				String sql = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
 				try {
 					return JdbcUtil.executeUpdate(sql, status, billId);
 				} catch (Exception e) {
@@ -194,15 +196,15 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	}
 
 	public int updateAfterVnpaySuccess(Integer billId, String transactionId, String txnRef) {
-		String sql = "UPDATE bills SET status = ?, payment_method = ?, vnpay_transaction_id = ?, vnp_txn_ref = ? WHERE id = ?";
+		String sql = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
 		try {
-			int rs = JdbcUtil.executeUpdate(sql, STATUS_FINISH, "vnpay", transactionId, txnRef, billId);
+			int rs = JdbcUtil.executeUpdate(sql, STATUS_FINISH, billId);
 			if (rs > 0) {
 				occupyCardIfNeeded(billId);
 			}
 			return rs;
 		} catch (Exception e) {
-			String fallback = "UPDATE bills SET status = ? WHERE id = ?";
+			String fallback = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
 			try {
 				int rs = JdbcUtil.executeUpdate(fallback, STATUS_FINISH, billId);
 				if (rs > 0) {
@@ -217,18 +219,18 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	}
 
 	public int markVnpayAttempt(Integer billId, String txnRef) {
-		String sql = "UPDATE bills SET payment_method = ?, vnp_txn_ref = ? WHERE id = ?";
+		String sql = "UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?";
 		try {
-			return JdbcUtil.executeUpdate(sql, "vnpay", txnRef, billId);
+			return JdbcUtil.executeUpdate(sql, billId);
 		} catch (Exception e) {
 			return 0;
 		}
 	}
 
 	public int updatePaymentMethod(Integer billId, String paymentMethod) {
-		String sql = "UPDATE bills SET payment_method = ? WHERE id = ?";
+		String sql = "UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?";
 		try {
-			return JdbcUtil.executeUpdate(sql, paymentMethod, billId);
+			return JdbcUtil.executeUpdate(sql, billId);
 		} catch (Exception e) {
 			return 0;
 		}
@@ -250,27 +252,6 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 		if (bill == null) {
 			return 0;
 		}
-		try {
-			ResultSet currentCard = JdbcUtil.executeQuery("SELECT card_id FROM bills WHERE id = ?", billId);
-			if (currentCard.next()) {
-				int cardId = currentCard.getInt("card_id");
-				if (cardId > 0) {
-					JdbcUtil.executeUpdate("UPDATE cards SET status = ? WHERE id = ?", 1, cardId);
-					return cardId;
-				}
-			}
-
-			ResultSet availableCard = JdbcUtil.executeQuery(
-					"SELECT TOP 1 id FROM cards WHERE ISNULL(status, 0) = 0 ORDER BY id");
-			if (availableCard.next()) {
-				int selectedCardId = availableCard.getInt("id");
-				JdbcUtil.executeUpdate("UPDATE bills SET card_id = ? WHERE id = ?", selectedCardId, billId);
-				JdbcUtil.executeUpdate("UPDATE cards SET status = ? WHERE id = ?", 1, selectedCardId);
-				return selectedCardId;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return 0;
 	}
 
@@ -282,7 +263,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 		for (BillDetail billDetail : billDetails) {
 			total += billDetail.getPrice() * billDetail.getQuantity();
 		}
-		String sql = "UPDATE bills SET total = ? WHERE id = ?";
+		String sql = "UPDATE HOADON SET tongTien = ? WHERE MaHD = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, total, billId);
 		} catch (Exception e) {
@@ -294,7 +275,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 //	Lấy danh sách hóa đơn của user theo userId
 	public List<Bill> findByUserId(Integer userId) {
 //		Lấy danh sách hóa đơn của user, sắp xếp theo trạng thái: waiting, finish, cancel
-		String sql = "SELECT * FROM bills WHERE user_id = ? ORDER BY CASE status WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 END";
+		String sql = SELECT_BILL_BASE + " WHERE MaNV = ? ORDER BY CASE trangThai WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 ELSE 4 END";
 		try {
 			return this.findBySql(sql, userId);
 		} catch (Exception e) {

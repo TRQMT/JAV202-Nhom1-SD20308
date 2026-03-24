@@ -38,7 +38,7 @@ public class PosServlet extends HttpServlet {
 			return;
 		}
 
-		String sql = "SELECT * FROM drinks WHERE active = ?";
+		String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG WHERE trangThai = ?";
 		List<Drink> drinks = drinkDAO.findBySql(sql, 1);
 
 		int billId = ParamUtil.getInt(req, "billId");

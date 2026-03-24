@@ -11,10 +11,10 @@ public class UserDAO implements CrudDAO<User, Integer> {
 
 	@Override
 	public int update(User entity) {
-		String sql = "UPDATE users SET email = ?, password = ?, full_name = ?, phone = ?, role = ?, active = ? WHERE id = ?";
+		String sql = "UPDATE NHANVIEN SET email = ?, matKhau = ?, hoTen = ?, sdt = ?, vaiTro = ?, trangThai = ? WHERE MaNV = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getEmail(), entity.getPassword(), entity.getFullName(),
-					entity.getPhone(), entity.isRole(), entity.isActive(), entity.getId());
+					entity.getPhone(), entity.isRole() ? "admin" : "employee", entity.isActive(), entity.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -23,7 +23,7 @@ public class UserDAO implements CrudDAO<User, Integer> {
 
 	@Override
 	public int delete(Integer id) {
-		String sql = "DELETE FROM users WHERE id = ?";
+		String sql = "DELETE FROM NHANVIEN WHERE MaNV = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, id);
 		} catch (Exception e) {
@@ -34,13 +34,13 @@ public class UserDAO implements CrudDAO<User, Integer> {
 
 	@Override
 	public List<User> findAll() {
-		String sql = "SELECT * FROM users";
+		String sql = "SELECT MaNV AS id, email, matKhau AS password, hoTen AS full_name, sdt AS phone, CASE WHEN vaiTro = 'admin' THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END AS role, trangThai AS active FROM NHANVIEN";
 		return this.findBySql(sql);
 	}
 
 	@Override
 	public User findById(Integer id) {
-		String sql = "SELECT * FROM users WHERE id = ?";
+		String sql = "SELECT MaNV AS id, email, matKhau AS password, hoTen AS full_name, sdt AS phone, CASE WHEN vaiTro = 'admin' THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END AS role, trangThai AS active FROM NHANVIEN WHERE MaNV = ?";
 		List<User> users = this.findBySql(sql, id);
 		return users.isEmpty() ? null : users.get(0);
 	}
@@ -63,7 +63,7 @@ public class UserDAO implements CrudDAO<User, Integer> {
 
 	public User findByEmail(String email) {
 		User user = null;
-		String sql = "select * from users where email = ?";
+		String sql = "select MaNV AS id, email, matKhau AS password, hoTen AS full_name, sdt AS phone, CASE WHEN vaiTro = 'admin' THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END AS role, trangThai AS active from NHANVIEN where email = ?";
 		try {
 			ResultSet rs = JdbcUtil.executeQuery(sql, email);
 			while (rs.next()) {
@@ -82,9 +82,9 @@ public class UserDAO implements CrudDAO<User, Integer> {
 	}
 
 	public List<User> findByRole(boolean role) {
-		String sql = "SELECT * FROM users WHERE role = ?";
+		String sql = "SELECT MaNV AS id, email, matKhau AS password, hoTen AS full_name, sdt AS phone, CASE WHEN vaiTro = 'admin' THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END AS role, trangThai AS active FROM NHANVIEN WHERE vaiTro = ?";
 		try {
-			return findBySql(sql, role);
+			return findBySql(sql, role ? "admin" : "employee");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,10 +93,10 @@ public class UserDAO implements CrudDAO<User, Integer> {
 
 	@Override
 	public int create(User entity) {
-		String sql = "INSERT INTO users(email, password, full_name, phone, role, active) values (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO NHANVIEN(email, matKhau, hoTen, sdt, vaiTro, trangThai) values (?, ?, ?, ?, ?, ?)";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getEmail(), entity.getPassword(), entity.getFullName(),
-					entity.getPhone(), entity.isRole(), entity.isActive());
+					entity.getPhone(), entity.isRole() ? "admin" : "employee", entity.isActive());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,7 +104,7 @@ public class UserDAO implements CrudDAO<User, Integer> {
 	}
 
 	public int updateUserInfo(User entity) {
-		String sql = "UPDATE users SET full_name = ?, phone = ? WHERE id = ?";
+		String sql = "UPDATE NHANVIEN SET hoTen = ?, sdt = ? WHERE MaNV = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getFullName(), entity.getPhone(), entity.getId());
 		} catch (Exception e) {
@@ -115,7 +115,7 @@ public class UserDAO implements CrudDAO<User, Integer> {
 	}
 
 	public int updateStatus(Integer id, boolean active) {
-		String sql = "UPDATE users SET active = ? WHERE id = ?";
+		String sql = "UPDATE NHANVIEN SET trangThai = ? WHERE MaNV = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, active, id);
 		} catch (Exception e) {
