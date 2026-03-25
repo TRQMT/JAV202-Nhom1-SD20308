@@ -50,7 +50,7 @@
       </header>
 
       <!-- NAVBAR -->
-      <nav class="navbar navbar-expand-lg navbar-dark">
+      <nav class="navbar navbar-expand-xl navbar-dark">
         <div class="container-fluid px-4">
 
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">

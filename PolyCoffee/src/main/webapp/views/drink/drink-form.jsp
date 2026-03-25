@@ -57,7 +57,7 @@
 </header>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-xl navbar-dark">
     <div class="container-fluid px-4">
 
         <button class="navbar-toggler" type="button"
@@ -108,6 +108,16 @@
                         Nhân viên
                     </a>
                 </li>
+
+                <c:if test="${sessionScope.user != null}">
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="${pageContext.request.contextPath}/employee/pos">
+                            <span class="material-symbols-outlined">point_of_sale</span>
+                            Bán hàng
+                        </a>
+                    </li>
+                </c:if>
 
             </ul>
 

@@ -89,6 +89,7 @@ header::after {
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 13.5px;
+  white-space: nowrap;
   letter-spacing: .4px;
   padding: 18px 14px !important;
   transition: color .2s, background .2s;
@@ -507,4 +508,14 @@ footer a:hover { color: var(--cream); }
   .card-body { padding: 16px !important; }
   .unauth-banner { padding: 36px 20px 28px; }
   .unauth-body { padding: 24px 20px; }
+}
+
+@media (max-width: 1199.98px) {
+  .navbar .navbar-collapse {
+    padding: 8px 0 12px;
+  }
+
+  .navbar .nav-link {
+    padding: 10px 12px !important;
+  }
 }

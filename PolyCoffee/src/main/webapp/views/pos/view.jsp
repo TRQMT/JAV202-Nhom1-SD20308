@@ -62,7 +62,7 @@
 </header>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-xl navbar-dark">
 <div class="container-fluid px-4">
 
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -217,6 +217,17 @@ Tổng: ${bill != null ? bill.total : 0} đ
 
 <form action="${pageContext.request.contextPath}/employee/pos/checkout" method="post">
 <input type="hidden" name="billId" value="${bill.id}">
+<div class="mb-3">
+<label class="form-label mb-2 fw-semibold">Phương thức thanh toán</label>
+<div class="form-check">
+<input class="form-check-input" type="radio" name="paymentMethod" id="paymentCash" value="cash" checked>
+<label class="form-check-label" for="paymentCash">Tiền mặt</label>
+</div>
+<div class="form-check">
+<input class="form-check-input" type="radio" name="paymentMethod" id="paymentVnpay" value="vnpay">
+<label class="form-check-label" for="paymentVnpay">Chuyển khoản VNPay</label>
+</div>
+</div>
 <button class="btn btn-success w-100"
 ${bill == null || empty billDetails ? 'disabled' : ''}>
 <span class="material-symbols-outlined">payments</span>

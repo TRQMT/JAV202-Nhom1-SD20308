@@ -196,43 +196,66 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	}
 
 	public int updateAfterVnpaySuccess(Integer billId, String transactionId, String txnRef) {
-		String sql = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
+		int rs = 0;
 		try {
-			int rs = JdbcUtil.executeUpdate(sql, STATUS_FINISH, billId);
-			if (rs > 0) {
-				occupyCardIfNeeded(billId);
-			}
-			return rs;
-		} catch (Exception e) {
-			String fallback = "UPDATE HOADON SET trangThai = ? WHERE MaHD = ?";
+			rs = JdbcUtil.executeUpdate(
+					"UPDATE HOADON SET trangThai = ?, payment_method = ?, vnpay_transaction_id = ?, vnp_txn_ref = ? WHERE MaHD = ?",
+					STATUS_FINISH, "vnpay", transactionId, txnRef, billId);
+		} catch (Exception e1) {
 			try {
-				int rs = JdbcUtil.executeUpdate(fallback, STATUS_FINISH, billId);
-				if (rs > 0) {
-					occupyCardIfNeeded(billId);
+				rs = JdbcUtil.executeUpdate(
+						"UPDATE HOADON SET trangThai = ?, payment_method = ?, vnp_txn_ref = ? WHERE MaHD = ?",
+						STATUS_FINISH, "vnpay", txnRef, billId);
+			} catch (Exception e2) {
+				try {
+					rs = JdbcUtil.executeUpdate("UPDATE HOADON SET trangThai = ?, payment_method = ? WHERE MaHD = ?",
+							STATUS_FINISH, "vnpay", billId);
+				} catch (Exception e3) {
+					try {
+						rs = JdbcUtil.executeUpdate("UPDATE HOADON SET trangThai = ? WHERE MaHD = ?", STATUS_FINISH, billId);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
-				return rs;
-			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
 		}
-		return 0;
+
+		if (rs > 0) {
+			occupyCardIfNeeded(billId);
+		}
+		return rs;
 	}
 
 	public int markVnpayAttempt(Integer billId, String txnRef) {
-		String sql = "UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?";
 		try {
-			return JdbcUtil.executeUpdate(sql, billId);
-		} catch (Exception e) {
-			return 0;
+			return JdbcUtil.executeUpdate("UPDATE HOADON SET payment_method = ?, vnp_txn_ref = ? WHERE MaHD = ?", "vnpay",
+					txnRef, billId);
+		} catch (Exception e1) {
+			try {
+				return JdbcUtil.executeUpdate("UPDATE HOADON SET vnp_txn_ref = ? WHERE MaHD = ?", txnRef, billId);
+			} catch (Exception e2) {
+				try {
+					return JdbcUtil.executeUpdate("UPDATE HOADON SET payment_method = ? WHERE MaHD = ?", "vnpay", billId);
+				} catch (Exception e3) {
+					try {
+						return JdbcUtil.executeUpdate("UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?", billId);
+					} catch (Exception e4) {
+						return 0;
+					}
+				}
+			}
 		}
 	}
 
 	public int updatePaymentMethod(Integer billId, String paymentMethod) {
-		String sql = "UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?";
 		try {
-			return JdbcUtil.executeUpdate(sql, billId);
+			return JdbcUtil.executeUpdate("UPDATE HOADON SET payment_method = ? WHERE MaHD = ?", paymentMethod, billId);
 		} catch (Exception e) {
-			return 0;
+			try {
+				return JdbcUtil.executeUpdate("UPDATE HOADON SET trangThai = trangThai WHERE MaHD = ?", billId);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 	}
 

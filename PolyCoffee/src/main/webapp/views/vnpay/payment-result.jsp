@@ -71,7 +71,7 @@ body {
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-custom px-4">
+<nav class="navbar navbar-expand-xl navbar-custom px-4">
     <a class="navbar-brand navbar-brand-custom" href="${pageContext.request.contextPath}/trang-chu">
         WELCOME TO MY COFFEE
     </a>
