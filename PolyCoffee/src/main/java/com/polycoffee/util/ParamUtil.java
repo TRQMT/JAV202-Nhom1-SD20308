@@ -11,7 +11,7 @@ public class ParamUtil {
 		try {
 			return request.getParameter(name);
 		} catch (Exception e) {
-			// TODO: handle exception
+		
 			return null;
 		}
 	}
@@ -20,7 +20,7 @@ public class ParamUtil {
 		try {
 			return Integer.parseInt(request.getParameter(name));
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			return 0;
 		}
 		

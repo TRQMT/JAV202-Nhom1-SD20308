@@ -24,7 +24,7 @@ public class AuthServlet extends HttpServlet {
      */
     public AuthServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
@@ -33,7 +33,7 @@ public class AuthServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, 
 			HttpServletResponse response)
 					throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	
 		request.getRequestDispatcher("/views/auth/login.jsp")
 			   .forward(request, response);
 	}

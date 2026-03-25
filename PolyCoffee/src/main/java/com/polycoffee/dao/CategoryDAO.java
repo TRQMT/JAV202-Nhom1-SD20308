@@ -11,12 +11,12 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	//Thêm mới loại đồ uống
 	@Override
 	public int create(Category entity) {
-		// TODO Auto-generated method stub
+	
 		String sql = "INSERT INTO LOAIDOUONG(tenLoai, hinhAnh, trangThai, moTa) values (?, ?, ?, ?)";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getName(), "default.jpg", entity.isActive(), "");
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return 0;
@@ -24,12 +24,12 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	//Cập nhật loại đồ uống
 	@Override
 	public int update(Category entity) {
-		// TODO Auto-generated method stub
+	
 		String sql = "UPDATE LOAIDOUONG SET tenLoai = ?, trangThai = ? WHERE maLoai = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, entity.getName(), entity.isActive(), entity.getId());
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return 0;
@@ -37,12 +37,12 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	//Xóa loại đồ uống
 	@Override
 	public int delete(Integer id) {
-		// TODO Auto-generated method stub
+		
 		String sql = "DELETE FROM LOAIDOUONG WHERE maLoai = ?";
 		try {
 			return JdbcUtil.executeUpdate(sql, id);
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return 0;
@@ -50,7 +50,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	//Lấy danh sách loại đồ uống
 	@Override
 	public List<Category> findAll() {
-		// TODO Auto-generated method stub
+		
 		List<Category> list = new ArrayList<Category>();
 		String sql = "SELECT maLoai AS id, tenLoai AS name, trangThai AS active FROM LOAIDOUONG";
 		try {
@@ -63,7 +63,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 				list.add(category);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return list;
@@ -71,7 +71,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	//Lấy thông tin loại đồ uống theo id
 	@Override
 	public Category findById(Integer id) {
-		// TODO Auto-generated method stub
+		
 		Category category = null;
 		String sql = "SELECT maLoai AS id, tenLoai AS name, trangThai AS active FROM LOAIDOUONG WHERE maLoai = ?";
 		try {
@@ -82,7 +82,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 				category = new Category(id, name, active);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return category;
@@ -90,7 +90,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 	
 	@Override
 	public List<Category> findBySql(String sql, Object... values) {
-		// TODO Auto-generated method stub
+		
 		List<Category> list = new ArrayList<Category>();
 		try {
 			ResultSet resultSet = JdbcUtil.executeQuery(sql, values);
@@ -102,7 +102,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 				list.add(category);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+		
 			e.printStackTrace();
 		}
 		return list;
@@ -117,7 +117,7 @@ public class CategoryDAO implements CrudDAO<Category, Integer>{
 				rs = resultSet.getInt("num_drink");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 			e.printStackTrace();
 		}
 		return rs;

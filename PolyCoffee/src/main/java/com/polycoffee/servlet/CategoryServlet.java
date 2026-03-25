@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.polycoffee.dao.CategoryDAO;
 import com.polycoffee.entity.Category;
-import com.polycoffee.util.AuthUtil;
 import com.polycoffee.util.ParamUtil;
 
 /**
@@ -29,14 +28,14 @@ public class CategoryServlet extends HttpServlet {
      */
     public CategoryServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		
 		//kiểm tra id trường hợp chỉnh sửa
 		int id = ParamUtil.getInt(request, "id");
@@ -53,7 +52,7 @@ public class CategoryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		String uriString = request.getRequestURI();
 		if (uriString.contains("add")) {
 			create(request);
