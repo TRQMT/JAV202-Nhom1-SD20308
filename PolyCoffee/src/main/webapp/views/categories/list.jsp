@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
@@ -159,21 +158,13 @@
                         <%-- Hiển thị danh sách loại đồ uống --%>
                         <c:forEach items="${categories}" var="cat">
                             <tr>
-<<<<<<< HEAD
+
                                 <td>${cat.maLoai}</td><%-- sửa: id → maLoai --%>
                                 <td style="font-weight:600;">${cat.tenLoai}</td><%-- sửa: name → tenLoai --%>
                                 <td>
                                     <%-- sửa: active → trangThai --%>
                                     <span class="badge ${cat.trangThai ? 'bg-success' : 'bg-secondary'}">
                                         ${cat.trangThai ? 'Hoạt động' : 'Ẩn'}
-=======
-                                <td>${c.id}</td>
-                                <td style="font-weight:600;">${c.name}</td>
-                                <td>-</td>
-                                <td>
-                                    <span class="badge ${c.active ? 'bg-success' : 'bg-secondary'}">
-                                        ${c.active ? 'Hoạt động' : 'Ẩn'}
->>>>>>> 8542c49dc7bef3e69568bf9dd905a4484a22fb5d
                                     </span>
                                 </td>
                                 <td class="text-center">
@@ -272,48 +263,5 @@
 </script>
 </body>
 </html>
-=======
-<table class="table table-hover align-middle mb-0">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên loại</th>
-            <th>Trạng thái</th>
-            <th class="text-center">Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <c:forEach items="${categories}" var="cat">
-            <tr>
-                <td>${cat.id}</td>
-                <td><strong>${cat.name}</strong></td>
-                <td>
-                    <span class="badge ${cat.active ? 'bg-success' : 'bg-secondary'}">
-                        ${cat.active ? 'Hoạt động' : 'Ẩn'}
-                    </span>
-                </td>
-                <td class="text-center">
-                    <a href="${pageContext.request.contextPath}/manager/categories/edit?id=${cat.id}"
-                       class="btn btn-sm btn-outline-primary me-1">
-                        <span class="material-symbols-outlined">edit</span>Sửa
-                    </a>
-                    <a href="${pageContext.request.contextPath}/manager/categories/toggle?id=${cat.id}"
-                       class="btn btn-sm ${cat.active ? 'btn-outline-warning' : 'btn-outline-success'}">
-                        <span class="material-symbols-outlined">
-                            ${cat.active ? 'visibility_off' : 'visibility'}
-                        </span>
-                        ${cat.active ? 'Ẩn' : 'Hiện'}
-                    </a>
-                </td>
-            </tr>
-        </c:forEach>
-        <c:if test="${empty categories}">
-            <tr>
-                <td colspan="4" class="text-center text-muted py-4">
-                    <span class="material-symbols-outlined">inbox</span> Chưa có loại đồ uống
-                </td>
-            </tr>
-        </c:if>
-    </tbody>
-</table>
->>>>>>> 34beed2 (hoan thanh layout)
+
+
