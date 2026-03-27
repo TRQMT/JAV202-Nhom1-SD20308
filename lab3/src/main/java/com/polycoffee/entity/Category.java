@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
-     private int maLoai;
+    private int maLoai;
     private String tenLoai;
     private String hinhAnh;
     private boolean trangThai;

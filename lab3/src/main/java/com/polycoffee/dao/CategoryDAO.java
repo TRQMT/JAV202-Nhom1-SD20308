@@ -127,5 +127,39 @@ public class CategoryDAO {
             rs.getString("moTa")
         );
     }
-    
+public List<Category> findAll() {
+    List<Category> list = new ArrayList<>();
+    String sql = "SELECT maLoai, tenLoai, hinhAnh, trangThai, moTa FROM LOAIDOUONG WHERE trangThai = 1";
+    try {
+        ResultSet resultSet = JdbcUtil.executeQuery(sql);
+        while(resultSet.next()) {
+            Integer maLoai    = resultSet.getInt("maLoai");
+            String tenLoai    = resultSet.getString("tenLoai");
+            String hinhAnh    = resultSet.getString("hinhAnh");
+            boolean trangThai = resultSet.getBoolean("trangThai");
+            String moTa       = resultSet.getString("moTa");
+            Category category = new Category(maLoai, tenLoai, hinhAnh, trangThai, moTa);
+            list.add(category);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
+public int create(Category entity) {
+    String sql = "INSERT INTO LOAIDOUONG(tenLoai, hinhAnh, trangThai, moTa) VALUES (?, ?, ?, ?)";
+    try {
+        return JdbcUtil.executeUpdate(sql,
+            entity.getTenLoai(),    // sửa: getName() → getTenLoai()
+            entity.getHinhAnh(),    // sửa: "default.jpg" hardcode → lấy từ entity
+            entity.isTrangThai(),   // sửa: isActive() → isTrangThai()
+            entity.getMoTa()        // sửa: "" hardcode → lấy từ entity
+        );
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
+
 }

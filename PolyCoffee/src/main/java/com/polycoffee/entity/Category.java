@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
-	Integer id;
-	String name;
-	boolean active;
+    private int maLoai;
+    private String tenLoai;
+    private String hinhAnh;
+    private boolean trangThai;
+    private String moTa;
 }
-
-
