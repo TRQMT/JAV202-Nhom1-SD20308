@@ -1,0 +1,16 @@
+[
+  {
+    "port": 8080,
+    "app": "PolyCoffee",
+    "workspace": "d:\\Spring2026\\JAV202\\JAV202-Nhom1-SD20308\\PolyCoffee",
+    "home": "d:\\apache-tomcat-9.0.86-windows-x64\\apache-tomcat-9.0.86",
+    "version": "9.0.86"
+  },
+  {
+    "port": 8081,
+    "app": "PolyCoffee",
+    "workspace": "d:\\Spring2026\\JAV202\\JAV202-Nhom1-SD20308\\PolyCoffee",
+    "home": "d:\\apache-tomcat-9.0.86-windows-x64\\apache-tomcat-9.0.86",
+    "version": "9.0.86"
+  }
+]

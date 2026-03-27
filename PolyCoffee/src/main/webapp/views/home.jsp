@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core"      prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt"       prefix="fmt" %>
 <%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 
 <%--
@@ -12,229 +11,121 @@
     - Update DB username/password
 --%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Trang chủ - Poly Coffee</title>
+<c:set var="pageTitle" value="Trang chủ" scope="request"/>
+<c:set var="activeNav" value="home"      scope="request"/>
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<%@ include file="/views/layout/admin/header.jsp" %>
 
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Google Material Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-<!-- Your CSS -->
-<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet"/>
-
-<style>
-.material-symbols-outlined {
-    font-size: 18px;
-    vertical-align: middle;
-    margin-right: 6px;
-}
-
-.header-title {
-    font-family: 'Playfair Display', serif;
-    color: #fff;
-    font-size: 34px;
-    letter-spacing: 2px;
-}
-
-.navbar {
-    background: #1a0a00 !important;
-}
-
-.card {
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-}
-</style>
-
-</head>
-
-<body>
-
-<!-- HEADER -->
-<header class="text-center py-3" style="background: linear-gradient(135deg,#3b1f0a,#6b3317);">
-    <h1 class="header-title">WELCOME TO MY COFFEE</h1>
-</header>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-xl navbar-dark">
-    <div class="container-fluid px-4">
-
-        <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-            <!-- LEFT -->
-            <ul class="navbar-nav me-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link active"
-                       href="${pageContext.request.contextPath}/trang-chu">
-                        <span class="material-symbols-outlined">home</span>
-                        Trang chủ
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="${pageContext.request.contextPath}/manager/drinks">
-                        <span class="material-symbols-outlined">coffee</span>
-                        Đồ uống
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="${pageContext.request.contextPath}/bills">
-                        <span class="material-symbols-outlined">receipt_long</span>
-                        Hóa đơn
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="${pageContext.request.contextPath}/manager/staff">
-                        <span class="material-symbols-outlined">groups</span>
-                        Nhân viên
-                    </a>
-                </li>
-
-                <c:if test="${sessionScope.user != null}">
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="${pageContext.request.contextPath}/employee/pos">
-                            <span class="material-symbols-outlined">point_of_sale</span>
-                            Bán hàng
-                        </a>
-                    </li>
-                </c:if>
-
-            </ul>
-
-            <!-- RIGHT -->
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-
-                    <a class="nav-link dropdown-toggle" href="#"
-                       role="button" data-bs-toggle="dropdown">
-                        <span class="material-symbols-outlined">account_circle</span>
-                        ${sessionScope.user != null ? sessionScope.user.fullName : "Tài khoản"}
-                    </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-
-                        <c:if test="${sessionScope.user == null}">
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/dang-nhap">
-                                    <span class="material-symbols-outlined">login</span>
-                                    Đăng nhập
-                                </a>
-                            </li>
-                        </c:if>
-
-                        <c:if test="${sessionScope.user != null}">
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/edit-profile">
-                                    <span class="material-symbols-outlined">person</span>
-                                    Thông tin
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/change-pass">
-                                    <span class="material-symbols-outlined">password</span>
-                                    Đổi mật khẩu
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/logout">
-                                    <span class="material-symbols-outlined">logout</span>
-                                    Đăng xuất
-                                </a>
-                            </li>
-                        </c:if>
-
-                    </ul>
-                </li>
-            </ul>
-
-        </div>
-    </div>
-</nav>
-
-<!-- MAIN -->
+<!-- ===== MAIN ===== -->
 <main class="container mt-5">
 
-    <div class="text-center mb-4">
-        <h2>Choose Your Coffee</h2>
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Choose Your Coffee</h2>
         <p class="text-muted">Select a drink to start your experience</p>
     </div>
 
-    <div class="row">
+    <%-- Hiển thị drinks từ DB nếu có, fallback về 3 card tĩnh --%>
+    <c:choose>
 
-        <!-- Espresso -->
-        <div class="col-md-4 mb-4">
-            <div class="card text-center p-3">
-                <h5>
-                    <span class="material-symbols-outlined">coffee</span>
-                    Espresso
-                </h5>
-                <p class="text-muted">Strong and bold coffee</p>
-                <button class="btn btn-primary">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    Chọn
-                </button>
+        <c:when test="${not empty drinks}">
+            <div class="row g-4">
+                <c:forEach items="${drinks}" var="drink">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card text-center p-3 h-100">
+
+                            <c:choose>
+                                <c:when test="${not empty drink.image}">
+                                    <img src="${pageContext.request.contextPath}/uploads/${drink.image}"
+                                         class="card-img-top mb-2"
+                                         style="height:120px;object-fit:cover;border-radius:10px;"
+                                         alt="${drink.name}"
+                                         onerror="this.src='${pageContext.request.contextPath}/images/cafesua.jpg'">
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="height:120px;background:#f8f5f0;border-radius:10px;
+                                                display:flex;align-items:center;justify-content:center;"
+                                         class="mb-2">
+                                        <span class="material-symbols-outlined"
+                                              style="font-size:48px;color:#c9a07a;">coffee</span>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <h6 class="fw-bold">${drink.name}</h6>
+                            <p class="text-muted small mb-2">${drink.description}</p>
+                            <p class="fw-semibold mb-3" style="color:#6b3317;">
+                                <fmt:formatNumber value="${drink.price}" type="number"/> đ
+                            </p>
+
+                            <c:if test="${sessionScope.user != null}">
+                                <form action="${pageContext.request.contextPath}/employee/pos/add-item"
+                                      method="post">
+                                    <input type="hidden" name="drinkId" value="${drink.id}">
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        <span class="material-symbols-outlined">shopping_cart</span>Chọn
+                                    </button>
+                                </form>
+                            </c:if>
+
+                            <c:if test="${sessionScope.user == null}">
+                                <a href="${pageContext.request.contextPath}/dang-nhap"
+                                   class="btn btn-outline-primary btn-sm w-100">
+                                    <span class="material-symbols-outlined">lock</span>Đăng nhập để chọn
+                                </a>
+                            </c:if>
+
+                        </div>
+                    </div>
+                </c:forEach>
             </div>
-        </div>
+        </c:when>
 
-        <!-- Cappuccino -->
-        <div class="col-md-4 mb-4">
-            <div class="card text-center p-3">
-                <h5>
-                    <span class="material-symbols-outlined">local_cafe</span>
-                    Cappuccino
-                </h5>
-                <p class="text-muted">Smooth with milk foam</p>
-                <button class="btn btn-success">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    Chọn
-                </button>
+        <%-- Fallback: chưa có data từ DB --%>
+        <c:otherwise>
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-md-4">
+                    <div class="card text-center p-3">
+                        <span class="material-symbols-outlined"
+                              style="font-size:48px;color:#6b3317;">coffee</span>
+                        <h5 class="mt-2">Espresso</h5>
+                        <p class="text-muted small">Strong and bold coffee</p>
+                        <button class="btn btn-primary btn-sm">
+                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-3">
+                        <span class="material-symbols-outlined"
+                              style="font-size:48px;color:#6b3317;">local_cafe</span>
+                        <h5 class="mt-2">Cappuccino</h5>
+                        <p class="text-muted small">Smooth with milk foam</p>
+                        <button class="btn btn-success btn-sm">
+                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-3">
+                        <span class="material-symbols-outlined"
+                              style="font-size:48px;color:#6b3317;">emoji_food_beverage</span>
+                        <h5 class="mt-2">Latte</h5>
+                        <p class="text-muted small">Light and creamy</p>
+                        <button class="btn btn-warning btn-sm">
+                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
+                        </button>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </c:otherwise>
 
-        <!-- Latte -->
-        <div class="col-md-4 mb-4">
-            <div class="card text-center p-3">
-                <h5>
-                    <span class="material-symbols-outlined">emoji_food_beverage</span>
-                    Latte
-                </h5>
-                <p class="text-muted">Light and creamy</p>
-                <button class="btn btn-warning">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    Chọn
-                </button>
-            </div>
-        </div>
-
-    </div>
+    </c:choose>
 
 </main>
+<%-- ===== END MAIN ===== --%>
 
-</body>
-</html>
+<%@ include file="/views/layout/admin/footer.jsp" %>
