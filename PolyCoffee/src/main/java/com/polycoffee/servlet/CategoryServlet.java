@@ -30,6 +30,100 @@ public class CategoryServlet extends HttpServlet {
     public CategoryServlet() {
         super();
     }
+<<<<<<< HEAD
+=======
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		
+		//kiểm tra id trường hợp chỉnh sửa
+		int id = ParamUtil.getInt(request, "id");
+		if (id > 0) {
+			Category category = categoryDAO.findById(id);
+			request.setAttribute("category", category);
+		}
+		List<Category> list = categoryDAO.findAll();
+		request.setAttribute("categories", list);
+		request.getRequestDispatcher("/views/categories/list.jsp").forward(request, response);
+	}
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		
+		String uriString = request.getRequestURI();
+		if (uriString.contains("add")) {
+			create(request);
+		}
+		if (uriString.contains("edit")) {
+			update(request);
+		}
+		if (uriString.contains("delete")) {
+			delete(request);
+		}
+		List<Category> list = categoryDAO.findAll();
+		request.setAttribute("categories", list);
+		request.getRequestDispatcher("/views/categories/list.jsp").forward(request, response);
+	}
+	//xử lý thêm mới
+	public void create(HttpServletRequest request) {
+		Integer id = ParamUtil.getInt(request, "id");
+		String name = ParamUtil.getString(request, "name");
+		if (name.isEmpty()) {
+			request.setAttribute("error", "Tên không được để trống");
+		}else {
+			Category category = new Category(id, name, true);
+			int rs = categoryDAO.create(category);
+			if (rs > 0) {
+				request.setAttribute("message", "Thêm mới thành công");
+			}else {
+				request.setAttribute("error", "Thêm mới thất bại");
+			}
+		}
+	}
+	//xử lý cập nhật
+	public void update(HttpServletRequest request) {
+		Integer id = ParamUtil.getInt(request, "id");
+		String name = ParamUtil.getString(request, "name");
+		Category category = categoryDAO.findById(id);
+		if (category != null) {
+			category.setName(name);
+			int rs = categoryDAO.update(category);
+			if (rs > 0) {
+				request.setAttribute("message", "Cập nhật thành công");
+			}else {
+				request.setAttribute("error", "Cập nhật thất bại");
+			}
+			request.setAttribute("category", category);
+		}else {
+			request.setAttribute("error", "Loại không tồn tại");
+		}
+		
+	}
+	//xử lý xóa
+	public void delete(HttpServletRequest request) {
+		Integer id = ParamUtil.getInt(request, "id");
+		if (id > 0) {
+			Category category = categoryDAO.findById(id);
+			int countDrink = categoryDAO.countDrinkInCategory(id);
+			if (countDrink > 0) {
+				category.setActive(false);
+				categoryDAO.update(category);
+			}else {
+				categoryDAO.delete(id);
+			}
+			request.setAttribute("message", "Xóa thành công");
+			request.setAttribute("category", null);
+		}else {
+			request.setAttribute("error", "Không tìm thấy loại đồ uống");
+		}
+	}	
+}
+>>>>>>> 8542c49dc7bef3e69568bf9dd905a4484a22fb5d
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

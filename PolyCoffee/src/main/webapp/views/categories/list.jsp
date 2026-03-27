@@ -158,12 +158,21 @@
                         <%-- Hiển thị danh sách loại đồ uống --%>
                         <c:forEach items="${categories}" var="cat">
                             <tr>
+<<<<<<< HEAD
                                 <td>${cat.maLoai}</td><%-- sửa: id → maLoai --%>
                                 <td style="font-weight:600;">${cat.tenLoai}</td><%-- sửa: name → tenLoai --%>
                                 <td>
                                     <%-- sửa: active → trangThai --%>
                                     <span class="badge ${cat.trangThai ? 'bg-success' : 'bg-secondary'}">
                                         ${cat.trangThai ? 'Hoạt động' : 'Ẩn'}
+=======
+                                <td>${c.id}</td>
+                                <td style="font-weight:600;">${c.name}</td>
+                                <td>-</td>
+                                <td>
+                                    <span class="badge ${c.active ? 'bg-success' : 'bg-secondary'}">
+                                        ${c.active ? 'Hoạt động' : 'Ẩn'}
+>>>>>>> 8542c49dc7bef3e69568bf9dd905a4484a22fb5d
                                     </span>
                                 </td>
                                 <td class="text-center">
