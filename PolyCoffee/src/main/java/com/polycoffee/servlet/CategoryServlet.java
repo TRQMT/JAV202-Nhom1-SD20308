@@ -44,7 +44,7 @@ public class CategoryServlet extends HttpServlet {
 			request.setAttribute("category", category);
 		}
 		List<Category> list = categoryDAO.findAll();
-		request.setAttribute("list", list);
+		request.setAttribute("categories", list);
 		request.getRequestDispatcher("/views/categories/list.jsp").forward(request, response);
 	}
 	/**
@@ -64,7 +64,7 @@ public class CategoryServlet extends HttpServlet {
 			delete(request);
 		}
 		List<Category> list = categoryDAO.findAll();
-		request.setAttribute("list", list);
+		request.setAttribute("categories", list);
 		request.getRequestDispatcher("/views/categories/list.jsp").forward(request, response);
 	}
 	//xử lý thêm mới

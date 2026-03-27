@@ -187,10 +187,10 @@
                             <tr>
                                 <td>${c.id}</td>
                                 <td style="font-weight:600;">${c.name}</td>
-                                <td>${c.description}</td>
+                                <td>-</td>
                                 <td>
-                                    <span class="badge ${c.status ? 'bg-success' : 'bg-secondary'}">
-                                        ${c.status ? 'Hoạt động' : 'Ẩn'}
+                                    <span class="badge ${c.active ? 'bg-success' : 'bg-secondary'}">
+                                        ${c.active ? 'Hoạt động' : 'Ẩn'}
                                     </span>
                                 </td>
                             </tr>
