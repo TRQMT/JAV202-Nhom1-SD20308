@@ -185,4 +185,29 @@ public class UserDAO implements CrudDAO<User, Integer> {
         }
         return 0;
     }
+
+    public int createGuest(User entity) {
+        String sql = "INSERT INTO NHANVIEN(email, matKhau, hoTen, sdt, vaiTro, trangThai) VALUES (?, ?, ?, ?, 'guest', ?)";
+        try {
+            return JdbcUtil.executeUpdate(sql,
+                    entity.getEmail(),
+                    entity.getPassword(),
+                    entity.getFullName(),
+                    entity.getPhone(),
+                    entity.isActive());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int updatePasswordByEmail(String email, String newPassword) {
+        String sql = "UPDATE NHANVIEN SET matKhau = ? WHERE email = ?";
+        try {
+            return JdbcUtil.executeUpdate(sql, newPassword, email);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

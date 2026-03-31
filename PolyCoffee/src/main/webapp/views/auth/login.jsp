@@ -186,6 +186,13 @@ body{
       </div>
     </c:if>
 
+    <c:if test="${not empty success}">
+      <div class="error-box" style="background:rgba(25,135,84,.08);border-color:rgba(25,135,84,.3);color:#146c43;">
+        <span class="material-symbols-outlined">check_circle</span>
+        ${success}
+      </div>
+    </c:if>
+
     <form action="${pageContext.request.contextPath}/dang-nhap" method="post" autocomplete="off">
 
       <div class="field">
@@ -210,6 +217,11 @@ body{
         <span class="material-symbols-outlined">login</span>
         Đăng nhập
       </button>
+
+      <div style="display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:.88rem;">
+        <a href="${pageContext.request.contextPath}/quen-mat-khau" style="color:#6b3317;text-decoration:none;">Quên mật khẩu?</a>
+        <a href="${pageContext.request.contextPath}/dang-ky" style="color:#6b3317;text-decoration:none;font-weight:600;">Tạo tài khoản</a>
+      </div>
 
     </form>
   </div>
