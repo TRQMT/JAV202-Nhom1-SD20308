@@ -101,6 +101,11 @@ body{
     color:#7a6858;font-size:.875rem;margin-bottom:1.4rem;
 }
 
+.otp-email{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+}
+
 .field{margin-bottom:1rem;}
 .field label{
     display:block;font-size:.78rem;font-weight:600;
@@ -205,7 +210,7 @@ body{
 
         <c:choose>
             <c:when test="${step == 'verify'}">
-                <div class="form-sub" style="margin-bottom:1rem;">
+                <div class="form-sub otp-email" style="margin-bottom:1rem;">
                     Nhập OTP đã gửi đến email: <strong>${email}</strong>
                 </div>
                 <form method="post" action="${pageContext.request.contextPath}/dang-ky" autocomplete="off">

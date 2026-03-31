@@ -94,6 +94,18 @@ public class RegisterServlet extends HttpServlet {
         String otp = OtpUtil.issueOtp(request, OTP_PURPOSE_REGISTER, email, 5);
         boolean sent = MailUtil.sendOtp(email, otp, "Đăng ký tài khoản");
 
+        if (!sent) {
+            OtpUtil.clearOtp(request, OTP_PURPOSE_REGISTER);
+            request.getSession().removeAttribute(SESSION_PENDING_REGISTER_EMAIL);
+            request.getSession().removeAttribute(SESSION_PENDING_REGISTER_PASSWORD);
+            request.getSession().removeAttribute(SESSION_PENDING_REGISTER_NAME);
+            request.getSession().removeAttribute(SESSION_PENDING_REGISTER_PHONE);
+            request.setAttribute("step", "request");
+            request.setAttribute("error", "Không gửi được email OTP. Kiểm tra cấu hình mail.");
+            request.getRequestDispatcher("/views/auth/register.jsp").forward(request, response);
+            return;
+        }
+
         request.getSession().setAttribute(SESSION_PENDING_REGISTER_EMAIL, email);
         request.getSession().setAttribute(SESSION_PENDING_REGISTER_PASSWORD, password);
         request.getSession().setAttribute(SESSION_PENDING_REGISTER_NAME, fullName);
@@ -101,9 +113,6 @@ public class RegisterServlet extends HttpServlet {
 
         request.setAttribute("step", "verify");
         request.setAttribute("success", "Đã gửi OTP đến email của bạn.");
-        if (!sent) {
-            request.setAttribute("error", "Không gửi được email OTP. Kiểm tra cấu hình mail.");
-        }
         request.getRequestDispatcher("/views/auth/register.jsp").forward(request, response);
     }
 

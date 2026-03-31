@@ -65,13 +65,18 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         String otp = OtpUtil.issueOtp(request, OTP_PURPOSE_RESET_PASSWORD, email, 5);
         boolean sent = MailUtil.sendOtp(email, otp, "Đặt lại mật khẩu");
-        request.getSession().setAttribute(SESSION_RESET_EMAIL, email);
+        if (!sent) {
+            OtpUtil.clearOtp(request, OTP_PURPOSE_RESET_PASSWORD);
+            request.getSession().removeAttribute(SESSION_RESET_EMAIL);
+            request.setAttribute("step", "request");
+            request.setAttribute("error", "Không gửi được email OTP. Kiểm tra cấu hình mail.");
+            request.getRequestDispatcher("/views/auth/forgot-password.jsp").forward(request, response);
+            return;
+        }
 
+        request.getSession().setAttribute(SESSION_RESET_EMAIL, email);
         request.setAttribute("step", "verify");
         request.setAttribute("success", "Đã gửi OTP đến email của bạn.");
-        if (!sent) {
-            request.setAttribute("error", "Không gửi được email OTP. Kiểm tra cấu hình mail.");
-        }
         request.getRequestDispatcher("/views/auth/forgot-password.jsp").forward(request, response);
     }
 
