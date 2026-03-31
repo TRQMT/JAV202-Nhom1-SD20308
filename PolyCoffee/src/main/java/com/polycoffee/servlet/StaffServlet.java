@@ -10,7 +10,6 @@ import jakarta.servlet.http.*;
 import com.polycoffee.dao.UserDAO;
 import com.polycoffee.entity.User;
 import com.polycoffee.util.ParamUtil;
-
 @WebServlet({ "/manager/staff", "/manager/staff/add", "/manager/staff/edit", "/manager/staff/update-status" })
 public class StaffServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -31,9 +30,6 @@ public class StaffServlet extends HttpServlet {
         // ===== EDIT =====
         if (uri.contains("/manager/staff/edit")) {
             int userId = ParamUtil.getInt(req, "id");
-            if (userId == 0) {
-                userId = ParamUtil.getInt(req, "userId");
-            }
 
             User user = userDAO.findById(userId);
             if (user == null || user.isRole()) {
@@ -52,8 +48,18 @@ public class StaffServlet extends HttpServlet {
             return;
         }
 
-        // ===== LIST =====
-        listStaff(req);
+        // ===== LIST + SEARCH =====
+        String keyword = req.getParameter("keyword");
+
+        List<User> staffList;
+        if (keyword != null && !keyword.isBlank()) {
+            staffList = userDAO.searchStaff(keyword);
+            req.setAttribute("keyword", keyword);
+        } else {
+            staffList = userDAO.findByRole(false);
+        }
+
+        req.setAttribute("staffList", staffList);
         req.getRequestDispatcher("/views/staff/staff-list.jsp").forward(req, resp);
     }
 
@@ -81,12 +87,6 @@ public class StaffServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
 
-    // ===== LIST =====
-    public void listStaff(HttpServletRequest req) {
-        List<User> staffList = userDAO.findByRole(false);
-        req.setAttribute("staffList", staffList);
-    }
-
     // ===== CREATE =====
     public void create(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -101,8 +101,7 @@ public class StaffServlet extends HttpServlet {
             return;
         }
 
-        userDAO.create(staff); // ✔ KHÔNG còn warning
-
+        userDAO.create(staff);
         resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
 
@@ -114,13 +113,9 @@ public class StaffServlet extends HttpServlet {
         if (staff == null) return;
 
         int userId = ParamUtil.getInt(req, "userId");
-        if (userId == 0) {
-            userId = ParamUtil.getInt(req, "id");
-        }
-
         staff.setId(userId);
 
-        userDAO.updateUserInfo(staff); // ✔ KHÔNG warning
+        userDAO.updateUserInfo(staff);
 
         resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
