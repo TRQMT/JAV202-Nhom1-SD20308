@@ -523,3 +523,105 @@ footer a:hover { color: var(--cream); }
     padding: 10px 12px !important;
   }
 }
+
+/* Container tổng */
+.search-bar-container {
+    margin-bottom: 20px;
+}
+
+/* Hàng chứa tất cả: input + 2 nút — KHÔNG wrap */
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap; /* ← giữ tất cả trên 1 hàng */
+}
+
+/* Wrapper của input + icon */
+.search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto; /* không co giãn tự do */
+}
+
+/* Icon kính lúp bên trong */
+.search-icon-svg {
+    position: absolute;
+    left: 12px;
+    color: #a07850;
+    pointer-events: none;
+}
+
+/* Ô nhập */
+.search-input {
+    width: 280px;
+    padding: 9px 14px 9px 38px;
+    border: 1.5px solid #d6c9b4;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fffcf7;
+    color: #3b2a1a;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.search-input::placeholder {
+    color: #b8a898;
+}
+
+.search-input:focus {
+    border-color: #b45309;
+    box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.12);
+    background-color: #ffffff;
+}
+
+/* Nút Tìm kiếm */
+.btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background-color: #b45309;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;        /* ← không xuống dòng */
+    flex-shrink: 0;             /* ← không bị ép nhỏ */
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-search:hover {
+    background-color: #92400e;
+}
+
+.btn-search:active {
+    transform: scale(0.97);
+}
+
+/* Nút Xóa */
+.btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 9px 14px;
+    background-color: #f5ede0;
+    color: #7c4f28;
+    border: 1.5px solid #d6c9b4;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;        /* ← không xuống dòng */
+    flex-shrink: 0;             /* ← không bị ép nhỏ */
+    transition: background-color 0.2s;
+}
+
+.btn-reset:hover {
+    background-color: #ecdcca;
+    color: #3b2a1a;
+}

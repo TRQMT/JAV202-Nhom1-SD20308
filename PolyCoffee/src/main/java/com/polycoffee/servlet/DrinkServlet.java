@@ -80,8 +80,17 @@ public class DrinkServlet extends HttpServlet {
 
 	// Danh sách đồ uống cho Manager
 	private void getDrinksManager(HttpServletRequest request) {
-		List<Drink> list = drinkDAO.findAll();
-		request.setAttribute("drinks", list);
+		 String keyword = ParamUtil.getString(request, "keyword");
+    List<Drink> list;
+
+    if (keyword != null && !keyword.isBlank()) {
+        list = drinkDAO.findByName(keyword);
+        request.setAttribute("keyword", keyword); // giữ lại từ khóa trên form
+    } else {
+        list = drinkDAO.findAll();
+    }
+
+    request.setAttribute("drinks", list);
 	}
 
 	// Thêm mới đồ uống

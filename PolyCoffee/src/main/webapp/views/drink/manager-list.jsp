@@ -26,6 +26,35 @@
         </div>
     </c:if>
 
+  <form action="${pageContext.request.contextPath}/manager/drinks" method="GET" class="mb-3">
+    <div class="input-group" style="max-width: 480px;">
+        <span class="input-group-text bg-white border-end-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </span>
+        <input
+            type="text"
+            name="keyword"
+            value="${keyword}"
+            class="form-control border-start-0 ps-0"
+            placeholder="Tìm kiếm theo tên đồ uống..."
+        />
+        <button type="submit" class="btn btn-primary px-3">
+            <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">search</span>
+            Tìm kiếm
+        </button>
+        <a href="${pageContext.request.contextPath}/manager/drinks"
+           class="btn btn-outline-secondary px-3">
+            <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">close</span>
+            Xóa
+        </a>
+    </div>
+</form>
+
+
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">

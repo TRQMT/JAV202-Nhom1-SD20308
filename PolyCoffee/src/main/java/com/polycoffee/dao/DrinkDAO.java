@@ -122,4 +122,11 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
 		}
 		return list;
 	}
+
+	public List<Drink> findByName(String keyword) {
+    String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, "
+               + "hinhAnh AS image, donGia AS price, trangThai AS active "
+               + "FROM DOUONG WHERE tenDoUong LIKE ?";
+    return findBySql(sql, "%" + keyword + "%");
+}
 }
