@@ -12,25 +12,35 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 public class MailUtil {
+    // Dien dung thong tin Gmail/App Password cua ban tai day.
+    private static final String GMAIL_USERNAME = "tungttts01665@gmail.com";
+    private static final String GMAIL_APP_PASSWORD = "pqou yoah xjmr bxvw";
+
     private MailUtil() {
     }
 
     public static boolean sendOtp(String toEmail, String otpCode, String purpose) {
+        String subject = "[MyCafe] Ma OTP xac thuc";
+        String body = buildContent(otpCode, purpose);
+        String from = getConfig("MAIL_FROM", getConfig("MAIL_USERNAME", GMAIL_USERNAME));
+        return send(from, toEmail, subject, body) == 1;
+    }
+
+    public static int send(String from, String to, String subject, String body) {
         String host = getConfig("MAIL_HOST", "smtp.gmail.com");
         String port = getConfig("MAIL_PORT", "587");
-        String username = getConfig("MAIL_USERNAME", null);
-        String password = getConfig("MAIL_PASSWORD", null);
-        String from = getConfig("MAIL_FROM", username != null ? username : "noreply@polycoffee.local");
+        String username = getConfig("MAIL_USERNAME", GMAIL_USERNAME);
+        String password = getConfig("MAIL_PASSWORD", GMAIL_APP_PASSWORD);
 
         if (username == null || username.isBlank() || password == null || password.isBlank()) {
-            return false;
+            return -1;
         }
 
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.host", host);
+        props.setProperty("mail.smtp.port", port);
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -40,26 +50,27 @@ public class MailUtil {
         });
 
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(from));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("[MyCafe] Mã OTP xác thực");
-            message.setContent(buildContent(otpCode, purpose), "text/plain; charset=UTF-8");
-            Transport.send(message);
-            return true;
+            MimeMessage mail = new MimeMessage(session);
+            mail.setFrom(new InternetAddress(from));
+            mail.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            mail.setSubject(subject, "utf-8");
+            mail.setText(body, "utf-8", "html");
+            mail.setReplyTo(mail.getFrom());
+            Transport.send(mail);
+            return 1;
         } catch (MessagingException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 
     private static String buildContent(String otpCode, String purpose) {
-        return "Xin chào,\n\n"
-            + "Bạn vừa thực hiện thao tác: " + purpose + ".\n"
-            + "Mã OTP của bạn là: " + otpCode + "\n"
-            + "Mã có hiệu lực trong 5 phút.\n\n"
-            + "Nếu bạn không thực hiện thao tác này, vui lòng bỏ qua email.\n\n"
-                + "MyCafe";
+        return "Xin chao,<br><br>"
+            + "Ban vua thuc hien thao tac: " + purpose + ".<br>"
+            + "Ma OTP cua ban la: <b>" + otpCode + "</b><br>"
+            + "Ma co hieu luc trong 5 phut.<br><br>"
+            + "Neu ban khong thuc hien thao tac nay, vui long bo qua email.<br><br>"
+            + "MyCafe";
     }
 
     private static String getConfig(String key, String defaultValue) {
