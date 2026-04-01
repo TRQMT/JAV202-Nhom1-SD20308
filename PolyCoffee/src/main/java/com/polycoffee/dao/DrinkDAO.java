@@ -129,4 +129,42 @@ public class DrinkDAO implements CrudDAO<Drink, Integer> {
                + "FROM DOUONG WHERE tenDoUong LIKE ?";
     return findBySql(sql, "%" + keyword + "%");
 }
+
+// Đếm tổng số đồ uống
+public int countAll() {
+    String sql = "SELECT COUNT(*) AS total FROM DOUONG";
+    try {
+        ResultSet rs = JdbcUtil.executeQuery(sql);
+        if (rs.next()) return rs.getInt("total");
+    } catch (Exception e) { e.printStackTrace(); }
+    return 0;
+}
+
+// Đếm kết quả theo từ khóa
+public int countByName(String keyword) {
+    String sql = "SELECT COUNT(*) AS total FROM DOUONG WHERE tenDoUong LIKE ?";
+    try {
+        ResultSet rs = JdbcUtil.executeQuery(sql, "%" + keyword + "%");
+        if (rs.next()) return rs.getInt("total");
+    } catch (Exception e) { e.printStackTrace(); }
+    return 0;
+}
+
+// Lấy đồ uống theo trang (không tìm kiếm)
+public List<Drink> findByPage(int offset, int limit) {
+    String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, "
+               + "moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active "
+               + "FROM DOUONG ORDER BY MaDoUong "
+               + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+    return findBySql(sql, offset, limit);
+}
+
+// Lấy đồ uống theo trang + từ khóa
+public List<Drink> findByNameAndPage(String keyword, int offset, int limit) {
+    String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, "
+               + "moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active "
+               + "FROM DOUONG WHERE tenDoUong LIKE ? ORDER BY MaDoUong "
+               + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+    return findBySql(sql, "%" + keyword + "%", offset, limit);
+}
 }
