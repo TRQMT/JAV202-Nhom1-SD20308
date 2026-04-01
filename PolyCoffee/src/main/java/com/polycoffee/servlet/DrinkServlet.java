@@ -81,18 +81,34 @@ public class DrinkServlet extends HttpServlet {
 	// Danh sách đồ uống cho Manager
 	private void getDrinksManager(HttpServletRequest request) {
 		 String keyword = ParamUtil.getString(request, "keyword");
+
+    // Lấy số trang hiện tại, mặc định là 1
+    int page = ParamUtil.getInt(request, "page");
+    if (page <= 0) page = 1;
+
+    final int PAGE_SIZE = 10;
+    int offset = (page - 1) * PAGE_SIZE;
+
+    int totalRecords;
     List<Drink> list;
 
     if (keyword != null && !keyword.isBlank()) {
-        list = drinkDAO.findByName(keyword);
-        request.setAttribute("keyword", keyword); // giữ lại từ khóa trên form
+        totalRecords = drinkDAO.countByName(keyword);
+        list = drinkDAO.findByNameAndPage(keyword, offset, PAGE_SIZE);
+        request.setAttribute("keyword", keyword);
     } else {
-        list = drinkDAO.findAll();
+        totalRecords = drinkDAO.countAll();
+        list = drinkDAO.findByPage(offset, PAGE_SIZE);
     }
 
-    request.setAttribute("drinks", list);
-	}
+    // Tính tổng số trang (làm tròn lên)
+    int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
 
+    request.setAttribute("drinks", list);
+    request.setAttribute("currentPage", page);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("totalRecords", totalRecords);
+}
 	// Thêm mới đồ uống
 	private void create(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -268,4 +284,6 @@ public class DrinkServlet extends HttpServlet {
 
 		return drink;
 	}
+
+
 }

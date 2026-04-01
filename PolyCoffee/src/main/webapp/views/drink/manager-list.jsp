@@ -124,6 +124,83 @@
                 </table>
             </div>
         </div>
+
+ <c:if test="${totalPages > 1}">
+        <div class="card-footer bg-white border-top d-flex flex-wrap justify-content-between align-items-center gap-2 py-3 px-3">
+
+            <%-- Thông tin trang --%>
+            <small class="text-muted">
+                Trang <strong>${currentPage}</strong> / <strong>${totalPages}</strong>
+                &nbsp;·&nbsp; Tổng <strong>${totalRecords}</strong> đồ uống
+            </small>
+
+            <%-- Nút phân trang --%>
+            <nav aria-label="Phân trang đồ uống">
+                <ul class="pagination pagination-sm mb-0">
+
+                    <%-- Nút « đầu --%>
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <c:url var="firstUrl" value="/manager/drinks">
+                            <c:param name="page" value="1"/>
+                            <c:if test="${not empty keyword}">
+                                <c:param name="keyword" value="${keyword}"/>
+                            </c:if>
+                        </c:url>
+                        <a class="page-link" href="${firstUrl}" title="Trang đầu">&laquo;</a>
+                    </li>
+
+                    <%-- Nút ‹ trước --%>
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <c:url var="prevUrl" value="/manager/drinks">
+                            <c:param name="page" value="${currentPage - 1}"/>
+                            <c:if test="${not empty keyword}">
+                                <c:param name="keyword" value="${keyword}"/>
+                            </c:if>
+                        </c:url>
+                        <a class="page-link" href="${prevUrl}" title="Trang trước">&lsaquo;</a>
+                    </li>
+
+                    <%-- Số trang --%>
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}"
+                            ${i == currentPage ? 'aria-current="page"' : ''}>
+                            <c:url var="pageUrl" value="/manager/drinks">
+                                <c:param name="page" value="${i}"/>
+                                <c:if test="${not empty keyword}">
+                                    <c:param name="keyword" value="${keyword}"/>
+                                </c:if>
+                            </c:url>
+                            <a class="page-link" href="${pageUrl}">${i}</a>
+                        </li>
+                    </c:forEach>
+
+                    <%-- Nút › sau --%>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <c:url var="nextUrl" value="/manager/drinks">
+                            <c:param name="page" value="${currentPage + 1}"/>
+                            <c:if test="${not empty keyword}">
+                                <c:param name="keyword" value="${keyword}"/>
+                            </c:if>
+                        </c:url>
+                        <a class="page-link" href="${nextUrl}" title="Trang sau">&rsaquo;</a>
+                    </li>
+
+                    <%-- Nút » cuối --%>
+                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <c:url var="lastUrl" value="/manager/drinks">
+                            <c:param name="page" value="${totalPages}"/>
+                            <c:if test="${not empty keyword}">
+                                <c:param name="keyword" value="${keyword}"/>
+                            </c:if>
+                        </c:url>
+                        <a class="page-link" href="${lastUrl}" title="Trang cuối">&raquo;</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+        </c:if>
+
     </div>
 
 </main>
