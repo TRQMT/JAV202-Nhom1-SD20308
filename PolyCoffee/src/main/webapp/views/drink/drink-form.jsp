@@ -45,9 +45,9 @@
                     <select class="form-select" name="categoryId" required>
                         <option value="">-- Chọn danh mục --</option>
                         <c:forEach var="cat" items="${categories}">
-                            <option value="${cat.id}"
-                                    ${cat.id == drink.categoryId ? 'selected' : ''}>
-                                ${cat.name}
+                            <option value="${cat.maLoai}"
+                                    ${cat.maLoai == drink.categoryId ? 'selected' : ''}>
+                                ${cat.tenLoai}
                             </option>
                         </c:forEach>
                     </select>
