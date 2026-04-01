@@ -44,10 +44,10 @@
                     <label class="form-label fw-semibold">Danh mục <span class="text-danger">*</span></label>
                     <select class="form-select" name="categoryId" required>
                         <option value="">-- Chọn danh mục --</option>
-                        <c:forEach var="cat" items="${categories}">
-                            <option value="${cat.id}"
-                                    ${cat.id == drink.categoryId ? 'selected' : ''}>
-                                ${cat.name}
+                         <c:forEach var="cat" items="${categories}">
+                            <option value="${cat.maLoai}"
+                                    ${cat.maLoai == drink.categoryId ? 'selected' : ''}>
+                                ${cat.tenLoai}
                             </option>
                         </c:forEach>
                     </select>
