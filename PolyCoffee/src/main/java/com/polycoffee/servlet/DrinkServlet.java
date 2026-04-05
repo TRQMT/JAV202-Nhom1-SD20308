@@ -21,7 +21,7 @@ import com.polycoffee.util.FileUtil;
 import com.polycoffee.util.ParamUtil;
 
 @MultipartConfig
-@WebServlet({ "/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit", "/manager/drinks/delete" })
+@WebServlet({ "/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit", "/manager/drinks/delete", "/manager/drinks/toggle" })
 public class DrinkServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DrinkDAO drinkDAO = new DrinkDAO();
@@ -57,6 +57,11 @@ public class DrinkServlet extends HttpServlet {
 			return;
 		}
 
+		if (uriString.contains("toggle")) {
+			toggleStatus(req, resp);
+			return;
+		}
+
 		if (uriString.contains("/manager/drinks")) {
 			getDrinksManager(req);
 			req.getRequestDispatcher("/views/drink/manager-list.jsp").forward(req, resp);
@@ -77,6 +82,10 @@ public class DrinkServlet extends HttpServlet {
 		}
 		if (uriString.contains("delete")) {
 			delete(req, resp);
+			return;
+		}
+		if (uriString.contains("toggle")) {
+			toggleStatus(req, resp);
 			return;
 		}
 	}
@@ -191,6 +200,31 @@ public class DrinkServlet extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/manager/drinks?error=false");
 			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void toggleStatus(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			int drinkId = ParamUtil.getInt(request, "id");
+			if (drinkId == 0) {
+				drinkId = ParamUtil.getInt(request, "drinkId");
+			}
+
+			Drink drink = drinkDAO.findById(drinkId);
+			if (drink == null) {
+				response.sendRedirect(request.getContextPath() + "/manager/drinks?error=false");
+				return;
+			}
+
+			drink.setActive(!drink.isActive());
+			int rs = drinkDAO.update(drink);
+			if (rs > 0) {
+				response.sendRedirect(request.getContextPath() + "/manager/drinks?error=true");
+			} else {
+				response.sendRedirect(request.getContextPath() + "/manager/drinks?error=false");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
