@@ -91,7 +91,7 @@
                             <c:when test="${not empty drink.image}">
                                 <img src="${pageContext.request.contextPath}/uploads/${drink.image}"
                                      alt="${drink.name}"
-                                     onerror="this.src='${pageContext.request.contextPath}/images/cafesua.jpg'">
+                                     onerror="this.onerror=function(){this.style.display='none';};this.src='${pageContext.request.contextPath}/images/${drink.image}';">
                             </c:when>
                             <c:otherwise>
                                 <div style="height:110px;background:#f8f5f0;border-radius:8px;

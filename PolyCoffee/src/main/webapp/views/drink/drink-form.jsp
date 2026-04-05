@@ -70,6 +70,7 @@
                     <c:if test="${drink != null && not empty drink.image}">
                         <img class="img-preview mt-2"
                              src="${pageContext.request.contextPath}/uploads/${drink.image}"
+                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';"
                              alt="${drink.name}">
                     </c:if>
                 </div>
