@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class BestSellingDrink {
-	private int drinkId;
-	private String drinkName;
-	private int totalQuantitySold;
-	private long totalRevenue;
-
+    private int    drinkId;
+    private String drinkName;
+    private int    totalQuantitySold;
+    private long   totalRevenue;
 }
