@@ -53,6 +53,34 @@
             Danh sách sản phẩm
         </h4>
 
+        <form action="${pageContext.request.contextPath}/employee/pos" method="get" class="card mb-3">
+            <div class="card-body">
+                <input type="hidden" name="billId" value="${billId}">
+                <div class="row g-2">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" name="keyword" value="${keyword}"
+                               placeholder="Tìm theo tên đồ uống...">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" name="categoryId">
+                            <option value="">Tất cả danh mục</option>
+                            <c:forEach items="${categories}" var="cat">
+                                <option value="${cat.maLoai}"
+                                    ${selectedCategoryId == cat.maLoai ? 'selected' : ''}>
+                                    ${cat.tenLoai}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">search</span>Tìm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <div class="row g-3">
             <c:forEach items="${drinks}" var="drink">
                 <div class="col-6 col-md-4 col-lg-3">
@@ -86,6 +114,8 @@
                               method="post">
                             <input type="hidden" name="drinkId" value="${drink.id}">
                             <input type="hidden" name="billId"  value="${billId}">
+                            <input type="hidden" name="keyword" value="${keyword}">
+                            <input type="hidden" name="categoryId" value="${selectedCategoryId}">
                             <button type="submit" class="btn btn-sm btn-primary w-100 mt-1">
                                 <span class="material-symbols-outlined">add</span>Thêm
                             </button>

@@ -1,7 +1,9 @@
 package com.polycoffee.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.Part;
 
 import com.polycoffee.dao.CategoryDAO;
 import com.polycoffee.dao.DrinkDAO;
+import com.polycoffee.entity.Category;
 import com.polycoffee.entity.Drink;
 import com.polycoffee.util.FileUtil;
 import com.polycoffee.util.ParamUtil;
@@ -80,34 +83,41 @@ public class DrinkServlet extends HttpServlet {
 
 	// Danh sách đồ uống cho Manager
 	private void getDrinksManager(HttpServletRequest request) {
-		 String keyword = ParamUtil.getString(request, "keyword");
+		String keyword = ParamUtil.getString(request, "keyword");
+		if (keyword != null) {
+			keyword = keyword.trim();
+		}
+		int categoryId = ParamUtil.getInt(request, "categoryId");
+		Integer categoryFilter = categoryId > 0 ? categoryId : null;
 
-    // Lấy số trang hiện tại, mặc định là 1
-    int page = ParamUtil.getInt(request, "page");
-    if (page <= 0) page = 1;
+	int page = ParamUtil.getInt(request, "page");
+	if (page <= 0) page = 1;
 
     final int PAGE_SIZE = 10;
     int offset = (page - 1) * PAGE_SIZE;
 
-    int totalRecords;
-    List<Drink> list;
+	int totalRecords = drinkDAO.countByFilters(keyword, categoryFilter);
+	List<Drink> list = drinkDAO.findByFiltersAndPage(keyword, categoryFilter, offset, PAGE_SIZE);
 
-    if (keyword != null && !keyword.isBlank()) {
-        totalRecords = drinkDAO.countByName(keyword);
-        list = drinkDAO.findByNameAndPage(keyword, offset, PAGE_SIZE);
-        request.setAttribute("keyword", keyword);
-    } else {
-        totalRecords = drinkDAO.countAll();
-        list = drinkDAO.findByPage(offset, PAGE_SIZE);
-    }
-
-    // Tính tổng số trang (làm tròn lên)
     int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
+	if (totalPages <= 0) {
+		totalPages = 1;
+	}
+
+	List<Category> categories = categoryDAO.findAll();
+	Map<Integer, String> categoryNameMap = new HashMap<>();
+	for (Category category : categories) {
+		categoryNameMap.put(category.getMaLoai(), category.getTenLoai());
+	}
 
     request.setAttribute("drinks", list);
     request.setAttribute("currentPage", page);
     request.setAttribute("totalPages", totalPages);
     request.setAttribute("totalRecords", totalRecords);
+	request.setAttribute("keyword", keyword);
+	request.setAttribute("selectedCategoryId", categoryFilter);
+	request.setAttribute("categories", categories);
+	request.setAttribute("categoryNameMap", categoryNameMap);
 }
 	// Thêm mới đồ uống
 	private void create(HttpServletRequest request, HttpServletResponse response) {

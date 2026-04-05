@@ -167,4 +167,67 @@ public List<Drink> findByNameAndPage(String keyword, int offset, int limit) {
                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
     return findBySql(sql, "%" + keyword + "%", offset, limit);
 }
+
+public int countByFilters(String keyword, Integer categoryId) {
+	StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS total FROM DOUONG WHERE 1=1");
+	List<Object> params = new ArrayList<>();
+
+	if (keyword != null && !keyword.isBlank()) {
+		sql.append(" AND tenDoUong LIKE ?");
+		params.add("%" + keyword.trim() + "%");
+	}
+	if (categoryId != null && categoryId > 0) {
+		sql.append(" AND maLoai = ?");
+		params.add(categoryId);
+	}
+
+	try {
+		ResultSet rs = JdbcUtil.executeQuery(sql.toString(), params.toArray());
+		if (rs.next()) {
+			return rs.getInt("total");
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return 0;
+}
+
+public List<Drink> findByFiltersAndPage(String keyword, Integer categoryId, int offset, int limit) {
+	StringBuilder sql = new StringBuilder(
+			"SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG WHERE 1=1");
+	List<Object> params = new ArrayList<>();
+
+	if (keyword != null && !keyword.isBlank()) {
+		sql.append(" AND tenDoUong LIKE ?");
+		params.add("%" + keyword.trim() + "%");
+	}
+	if (categoryId != null && categoryId > 0) {
+		sql.append(" AND maLoai = ?");
+		params.add(categoryId);
+	}
+
+	sql.append(" ORDER BY MaDoUong OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+	params.add(offset);
+	params.add(limit);
+
+	return findBySql(sql.toString(), params.toArray());
+}
+
+public List<Drink> findActiveByFilters(String keyword, Integer categoryId) {
+	StringBuilder sql = new StringBuilder(
+			"SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG WHERE trangThai = 1");
+	List<Object> params = new ArrayList<>();
+
+	if (keyword != null && !keyword.isBlank()) {
+		sql.append(" AND tenDoUong LIKE ?");
+		params.add("%" + keyword.trim() + "%");
+	}
+	if (categoryId != null && categoryId > 0) {
+		sql.append(" AND maLoai = ?");
+		params.add(categoryId);
+	}
+
+	sql.append(" ORDER BY MaDoUong");
+	return findBySql(sql.toString(), params.toArray());
+}
 }

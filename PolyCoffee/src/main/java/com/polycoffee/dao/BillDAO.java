@@ -12,7 +12,7 @@ import com.polycoffee.util.JdbcUtil;
 
 public class BillDAO implements CrudDAO<Bill, Integer> {
 	private static final int DEFAULT_CUSTOMER_ID = 1;
-	private static final String SELECT_BILL_BASE = "SELECT MaHD AS id, MaNV AS user_id, CONCAT('HD', MaHD) AS code, ngayTao AS created_at, tongTien AS total, trangThai AS status FROM HOADON";
+	private static final String SELECT_BILL_BASE = "SELECT h.MaHD AS id, h.MaNV AS user_id, nv.hoTen AS user_name, CONCAT('HD', h.MaHD) AS code, h.ngayTao AS created_at, h.tongTien AS total, h.trangThai AS status FROM HOADON h LEFT JOIN NHANVIEN nv ON h.MaNV = nv.MaNV";
 
 	@Override
 	public int create(Bill entity) {
@@ -53,12 +53,12 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 	@Override
 	public List<Bill> findAll() {
-		return this.findBySql(SELECT_BILL_BASE);
+		return this.findBySql(SELECT_BILL_BASE + " ORDER BY h.ngayTao DESC, h.MaHD DESC");
 	}
 
 	@Override
 	public Bill findById(Integer id) {
-		String sql = SELECT_BILL_BASE + " WHERE MaHD = ?";
+		String sql = SELECT_BILL_BASE + " WHERE h.MaHD = ?";
 		List<Bill> bills = this.findBySql(sql, id);
 		return bills.isEmpty() ? null : bills.get(0);
 	}
@@ -72,10 +72,13 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 				Bill bill = new Bill();
 				bill.setId(rs.getInt("id"));
 				bill.setUserId(rs.getInt("user_id"));
+				if (hasColumn(rs, "user_name")) {
+					bill.setUserName(rs.getString("user_name"));
+				}
 				bill.setCode(rs.getString("code"));
 				bill.setCreatedAt(rs.getDate("created_at"));
 				bill.setTotal(rs.getInt("total"));
-				bill.setStatus(rs.getString("status"));
+				bill.setStatus(normalizeStatus(rs.getString("status")));
 				if (hasColumn(rs, "payment_method")) {
 					bill.setPaymentMethod(rs.getString("payment_method"));
 				}
@@ -91,6 +94,17 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	private String normalizeStatus(String status) {
+		if (status == null) {
+			return "";
+		}
+		String normalized = status.trim().toLowerCase();
+		if ("paid".equals(normalized)) {
+			return STATUS_FINISH;
+		}
+		return normalized;
 	}
 
 	private boolean hasColumn(ResultSet rs, String columnName) {
@@ -113,7 +127,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	public static final String STATUS_CANCEL = "cancel";
 
 	public Bill findByIdAndUserId(Integer id, Integer userId) {
-		String sql = SELECT_BILL_BASE + " WHERE MaHD = ? AND MaNV = ?";
+		String sql = SELECT_BILL_BASE + " WHERE h.MaHD = ? AND h.MaNV = ?";
 		try {
 			List<Bill> bills = this.findBySql(sql, id, userId);
 			if (!bills.isEmpty()) {
@@ -298,13 +312,50 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 //	Lấy danh sách hóa đơn của user theo userId
 	public List<Bill> findByUserId(Integer userId) {
 //		Lấy danh sách hóa đơn của user, sắp xếp theo trạng thái: waiting, finish, cancel
-		String sql = SELECT_BILL_BASE + " WHERE MaNV = ? ORDER BY CASE trangThai WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 ELSE 4 END";
+		String sql = SELECT_BILL_BASE
+				+ " WHERE h.MaNV = ? ORDER BY CASE LOWER(h.trangThai) WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 WHEN 'paid' THEN 2 ELSE 4 END, h.ngayTao DESC";
 		try {
 			return this.findBySql(sql, userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return new ArrayList<Bill>();
+	}
+
+	public int countAll() {
+		String sql = "SELECT COUNT(*) AS total FROM HOADON";
+		try {
+			ResultSet rs = JdbcUtil.executeQuery(sql);
+			if (rs.next()) {
+				return rs.getInt("total");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public int countByUserId(Integer userId) {
+		String sql = "SELECT COUNT(*) AS total FROM HOADON WHERE MaNV = ?";
+		try {
+			ResultSet rs = JdbcUtil.executeQuery(sql, userId);
+			if (rs.next()) {
+				return rs.getInt("total");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public List<Bill> findByPage(int offset, int limit) {
+		String sql = SELECT_BILL_BASE + " ORDER BY h.ngayTao DESC, h.MaHD DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+		return this.findBySql(sql, offset, limit);
+	}
+
+	public List<Bill> findByUserIdAndPage(Integer userId, int offset, int limit) {
+		String sql = SELECT_BILL_BASE + " WHERE h.MaNV = ? ORDER BY h.ngayTao DESC, h.MaHD DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+		return this.findBySql(sql, userId, offset, limit);
 	}
 
 }

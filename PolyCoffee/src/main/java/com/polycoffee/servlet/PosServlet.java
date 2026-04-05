@@ -1,6 +1,8 @@
 package com.polycoffee.servlet;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,9 +17,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.polycoffee.dao.BillDAO;
 import com.polycoffee.dao.BillDetailDAO;
+import com.polycoffee.dao.CategoryDAO;
 import com.polycoffee.dao.DrinkDAO;
 import com.polycoffee.entity.Bill;
 import com.polycoffee.entity.BillDetail;
+import com.polycoffee.entity.Category;
 import com.polycoffee.entity.Drink;
 import com.polycoffee.util.AuthUtil;
 import com.polycoffee.util.ParamUtil;
@@ -27,6 +31,7 @@ import com.polycoffee.util.ParamUtil;
 public class PosServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DrinkDAO drinkDAO = new DrinkDAO();
+	private CategoryDAO categoryDAO = new CategoryDAO();
 	private BillDAO billDAO = new BillDAO();
 	private BillDetailDAO billDetailDAO = new BillDetailDAO();
 
@@ -38,12 +43,22 @@ public class PosServlet extends HttpServlet {
 			return;
 		}
 
-		String sql = "SELECT MaDoUong AS id, maLoai AS category_id, tenDoUong AS name, moTa AS description, hinhAnh AS image, donGia AS price, trangThai AS active FROM DOUONG WHERE trangThai = ?";
-		List<Drink> drinks = drinkDAO.findBySql(sql, 1);
+		String keyword = ParamUtil.getString(req, "keyword");
+		if (keyword != null) {
+			keyword = keyword.trim();
+		}
+		int categoryId = ParamUtil.getInt(req, "categoryId");
+		Integer categoryFilter = categoryId > 0 ? categoryId : null;
+
+		List<Drink> drinks = drinkDAO.findActiveByFilters(keyword, categoryFilter);
+		List<Category> categories = categoryDAO.findAll();
 
 		int billId = ParamUtil.getInt(req, "billId");
 		req.setAttribute("drinks", drinks);
 		req.setAttribute("billId", billId);
+		req.setAttribute("keyword", keyword);
+		req.setAttribute("selectedCategoryId", categoryFilter);
+		req.setAttribute("categories", categories);
 
 		int userId = AuthUtil.getUser(req).getId();
 		List<Bill> userBills = billDAO.findByUserId(userId);
@@ -116,7 +131,7 @@ public class PosServlet extends HttpServlet {
 		Integer drinkId = ParamUtil.getInt(req, "drinkId");
 		Drink drink = drinkDAO.findById(drinkId);
 		if (drink == null || !drink.isActive()) {
-			resp.sendRedirect(req.getContextPath() + "/employee/pos");
+			resp.sendRedirect(req.getContextPath() + "/employee/pos" + buildPosFilterQuery(req));
 			return;
 		}
 
@@ -133,18 +148,19 @@ public class PosServlet extends HttpServlet {
 
 			int billIdDB = billDAO.createWithBillDetails(bill, billDetails);
 			if (billIdDB > 0) {
-				resp.sendRedirect(req.getContextPath() + "/employee/pos?billId=" + billIdDB);
+				resp.sendRedirect(req.getContextPath() + "/employee/pos?billId=" + billIdDB + buildPosFilterQuery(req));
 				return;
 			}
-			resp.sendRedirect(req.getContextPath() + "/employee/pos?message=add-item-failed");
+			resp.sendRedirect(req.getContextPath() + "/employee/pos?message=add-item-failed" + buildPosFilterQuery(req));
 			return;
 		} else {
 			int rs = billDetailDAO.addDrinkToBill(billId, drinkId);
 			if (rs > 0) {
-				resp.sendRedirect(req.getContextPath() + "/employee/pos?billId=" + billId);
+				resp.sendRedirect(req.getContextPath() + "/employee/pos?billId=" + billId + buildPosFilterQuery(req));
 				return;
 			}
-			resp.sendRedirect(req.getContextPath() + "/employee/pos?billId=" + billId + "&message=add-item-failed");
+			resp.sendRedirect(req.getContextPath()
+					+ "/employee/pos?billId=" + billId + "&message=add-item-failed" + buildPosFilterQuery(req));
 			return;
 		}
 
@@ -217,5 +233,21 @@ public class PosServlet extends HttpServlet {
 			return;
 		}
 		resp.sendRedirect(req.getContextPath() + "/employee/pos");
+	}
+
+	private String buildPosFilterQuery(HttpServletRequest req) {
+		StringBuilder sb = new StringBuilder();
+		String keyword = ParamUtil.getString(req, "keyword");
+		int categoryId = ParamUtil.getInt(req, "categoryId");
+
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			sb.append("&keyword=")
+					.append(URLEncoder.encode(keyword.trim(), StandardCharsets.UTF_8));
+		}
+		if (categoryId > 0) {
+			sb.append("&categoryId=").append(categoryId);
+		}
+
+		return sb.toString();
 	}
 }

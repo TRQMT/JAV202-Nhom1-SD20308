@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BestSellingDrink {
-    private int    drinkId;
-    private String drinkName;
-    private int    totalQuantitySold;
-    private long   totalRevenue;
+public class BillDetailView {
+    Integer id;
+    Integer billId;
+    Integer drinkId;
+    String drinkName;
+    int quantity;
+    int price;
+    long lineTotal;
 }

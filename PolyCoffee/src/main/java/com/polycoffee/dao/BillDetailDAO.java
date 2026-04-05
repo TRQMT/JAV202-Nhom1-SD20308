@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.polycoffee.entity.Bill;
 import com.polycoffee.entity.BillDetail;
+import com.polycoffee.entity.BillDetailView;
 import com.polycoffee.entity.Drink;
 import com.polycoffee.util.JdbcUtil;
 
@@ -22,6 +23,28 @@ public class BillDetailDAO implements CrudDAO<BillDetail, Integer> {
 		}
 		return new ArrayList<BillDetail>();
 	}
+
+		public List<BillDetailView> findDetailViewsByBillId(Integer billId) {
+			List<BillDetailView> list = new ArrayList<>();
+			String sql = "SELECT ct.MaCTHD AS id, ct.MaHD AS bill_id, ct.MaDoUong AS drink_id, d.tenDoUong AS drink_name, ct.soLuong AS quantity, ct.donGia AS price, (ct.soLuong * ct.donGia) AS line_total FROM CHITIETHOADON ct INNER JOIN DOUONG d ON ct.MaDoUong = d.MaDoUong WHERE ct.MaHD = ? ORDER BY ct.MaCTHD";
+			try {
+				ResultSet rs = JdbcUtil.executeQuery(sql, billId);
+				while (rs.next()) {
+					BillDetailView item = new BillDetailView();
+					item.setId(rs.getInt("id"));
+					item.setBillId(rs.getInt("bill_id"));
+					item.setDrinkId(rs.getInt("drink_id"));
+					item.setDrinkName(rs.getString("drink_name"));
+					item.setQuantity(rs.getInt("quantity"));
+					item.setPrice(rs.getInt("price"));
+					item.setLineTotal(rs.getLong("line_total"));
+					list.add(item);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return list;
+		}
 
 //	Thêm thức uống vào chi tiết hóa đơn
 	public int addDrinkToBill(Integer billId, Integer drinkId) {

@@ -1,8 +1,6 @@
 package com.polycoffee.servlet;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,69 +11,78 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.polycoffee.dao.StatisticDAO;
-import com.polycoffee.entity.BestSellingDrink;
+import com.polycoffee.entity.RevenueByDay;
+import com.polycoffee.entity.User;
+import com.polycoffee.util.AuthUtil;
+import com.polycoffee.util.DateUtil;
 import com.polycoffee.util.ParamUtil;
 
 @WebServlet("/manager/statistics")
 public class StatisticServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
     private final StatisticDAO statisticDAO = new StatisticDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = AuthUtil.getUser(req);
+        if (user == null) {
+            req.getSession().setAttribute("REDIRECT_URL", req.getRequestURI());
+            resp.sendRedirect(req.getContextPath() + "/dang-nhap");
+            return;
+        }
 
-        String fromDateStr = ParamUtil.getString(request, "fromDate");
-        String toDateStr   = ParamUtil.getString(request, "toDate");
+        if (!user.isRole()) {
+            resp.sendRedirect(req.getContextPath() + "/trang-chu");
+            return;
+        }
 
-        Date fromDate = parseDate(fromDateStr);
-        Date toDate   = parseDate(toDateStr);
+        Date fromDate = ParamUtil.getDate(req, "fromDate", "yyyy-MM-dd");
+        Date toDate = ParamUtil.getDate(req, "toDate", "yyyy-MM-dd");
 
-        List<BestSellingDrink> top5;
+        String fromDateRaw = ParamUtil.getString(req, "fromDate");
+        String toDateRaw = ParamUtil.getString(req, "toDate");
+
+        List<RevenueByDay> revenues;
+
         try {
-            top5 = statisticDAO.getTop5BestSellingDrinks(fromDate, toDate);
+            revenues = statisticDAO.getRevenueByDay(fromDate, toDate);
         } catch (Exception e) {
-            e.printStackTrace();
-            top5 = java.util.Collections.emptyList();
+            revenues = List.of();
+            req.setAttribute("error", "Không thể tải dữ liệu thống kê. Vui lòng kiểm tra dữ liệu hoặc stored procedure.");
         }
 
-        // Giữ lại giá trị filter trên form
-        if (fromDateStr != null && !fromDateStr.isEmpty()) {
-            request.setAttribute("fromDate", fromDateStr);
-        }
-        if (toDateStr != null && !toDateStr.isEmpty()) {
-            request.setAttribute("toDate", toDateStr);
-        }
+        req.setAttribute("revenues", revenues);
+        req.setAttribute("fromDate", fromDateRaw);
+        req.setAttribute("toDate", toDateRaw);
+        req.setAttribute("chartLabels", toJsonDateLabels(revenues));
+        req.setAttribute("chartRevenueData", toJsonRevenueData(revenues));
 
-        // Build data cho chart — dùng "||" separator để split bên JS
-        StringBuilder labels     = new StringBuilder();
-        StringBuilder quantities = new StringBuilder();
-
-        for (int i = 0; i < top5.size(); i++) {
-            BestSellingDrink item = top5.get(i);
-            if (i > 0) {
-                labels.append("||");
-                quantities.append(",");
-            }
-            labels.append(item.getDrinkName());
-            quantities.append(item.getTotalQuantitySold());
-        }
-
-        request.setAttribute("top5",           top5);
-        request.setAttribute("chartLabels",    labels.toString());
-        request.setAttribute("chartQuantities", quantities.toString());
-
-        request.getRequestDispatcher("/views/statistic/top5-drink.jsp")
-               .forward(request, response);
+        req.getRequestDispatcher("/views/statistics/index.jsp").forward(req, resp);
     }
 
-    // Parse String "yyyy-MM-dd" → Date, trả null nếu rỗng hoặc sai format
-    private Date parseDate(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) return null;
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr.trim());
-        } catch (ParseException e) {
-            return null;
+    private String toJsonDateLabels(List<RevenueByDay> revenues) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < revenues.size(); i++) {
+            String date = DateUtil.toString(revenues.get(i).getRevenueDate(), "dd/MM/yyyy");
+            sb.append('"').append(date.replace("\"", "\\\"")).append('"');
+            if (i < revenues.size() - 1) {
+                sb.append(',');
+            }
         }
+        sb.append(']');
+        return sb.toString();
+    }
+
+    private String toJsonRevenueData(List<RevenueByDay> revenues) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < revenues.size(); i++) {
+            sb.append(revenues.get(i).getTotalRevenue());
+            if (i < revenues.size() - 1) {
+                sb.append(',');
+            }
+        }
+        sb.append(']');
+        return sb.toString();
     }
 }

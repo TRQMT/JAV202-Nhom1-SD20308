@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Bill {
 	Integer id;
 	Integer userId;
+	String userName;
 	String code;
 	Date createdAt;
 	int total;

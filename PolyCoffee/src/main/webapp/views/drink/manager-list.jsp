@@ -27,30 +27,46 @@
     </c:if>
 
   <form action="${pageContext.request.contextPath}/manager/drinks" method="GET" class="mb-3">
-    <div class="input-group" style="max-width: 480px;">
-        <span class="input-group-text bg-white border-end-0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-        </span>
-        <input
-            type="text"
-            name="keyword"
-            value="${keyword}"
-            class="form-control border-start-0 ps-0"
-            placeholder="Tìm kiếm theo tên đồ uống..."
-        />
-        <button type="submit" class="btn btn-primary px-3">
-            <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">search</span>
-            Tìm kiếm
-        </button>
-        <a href="${pageContext.request.contextPath}/manager/drinks"
-           class="btn btn-outline-secondary px-3">
-            <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">close</span>
-            Xóa
-        </a>
+    <div class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </span>
+                <input
+                    type="text"
+                    name="keyword"
+                    value="${keyword}"
+                    class="form-control border-start-0 ps-0"
+                    placeholder="Tìm kiếm theo tên đồ uống..."
+                />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" name="categoryId">
+                <option value="">Tất cả danh mục</option>
+                <c:forEach items="${categories}" var="cat">
+                    <option value="${cat.maLoai}" ${selectedCategoryId == cat.maLoai ? 'selected' : ''}>
+                        ${cat.tenLoai}
+                    </option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-3">
+                <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">search</span>
+                Tìm kiếm
+            </button>
+            <a href="${pageContext.request.contextPath}/manager/drinks"
+               class="btn btn-outline-secondary px-3">
+                <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">close</span>
+                Xóa
+            </a>
+        </div>
     </div>
 </form>
 
@@ -89,7 +105,7 @@
                                 <td><strong>${drink.name}</strong>
                                     <div class="text-muted small">${drink.description}</div>
                                 </td>
-                                <td>${drink.name}</td>
+                                <td>${categoryNameMap[drink.categoryId]}</td>
                                 <td>
                                     <fmt:formatNumber value="${drink.price}" type="number"/> đ
                                 </td>
@@ -145,6 +161,9 @@
                             <c:if test="${not empty keyword}">
                                 <c:param name="keyword" value="${keyword}"/>
                             </c:if>
+                                <c:if test="${selectedCategoryId != null}">
+                                    <c:param name="categoryId" value="${selectedCategoryId}"/>
+                                </c:if>
                         </c:url>
                         <a class="page-link" href="${firstUrl}" title="Trang đầu">&laquo;</a>
                     </li>
@@ -156,6 +175,9 @@
                             <c:if test="${not empty keyword}">
                                 <c:param name="keyword" value="${keyword}"/>
                             </c:if>
+                                <c:if test="${selectedCategoryId != null}">
+                                    <c:param name="categoryId" value="${selectedCategoryId}"/>
+                                </c:if>
                         </c:url>
                         <a class="page-link" href="${prevUrl}" title="Trang trước">&lsaquo;</a>
                     </li>
@@ -169,6 +191,9 @@
                                 <c:if test="${not empty keyword}">
                                     <c:param name="keyword" value="${keyword}"/>
                                 </c:if>
+                                <c:if test="${selectedCategoryId != null}">
+                                    <c:param name="categoryId" value="${selectedCategoryId}"/>
+                                </c:if>
                             </c:url>
                             <a class="page-link" href="${pageUrl}">${i}</a>
                         </li>
@@ -181,6 +206,9 @@
                             <c:if test="${not empty keyword}">
                                 <c:param name="keyword" value="${keyword}"/>
                             </c:if>
+                                <c:if test="${selectedCategoryId != null}">
+                                    <c:param name="categoryId" value="${selectedCategoryId}"/>
+                                </c:if>
                         </c:url>
                         <a class="page-link" href="${nextUrl}" title="Trang sau">&rsaquo;</a>
                     </li>
@@ -192,6 +220,9 @@
                             <c:if test="${not empty keyword}">
                                 <c:param name="keyword" value="${keyword}"/>
                             </c:if>
+                                <c:if test="${selectedCategoryId != null}">
+                                    <c:param name="categoryId" value="${selectedCategoryId}"/>
+                                </c:if>
                         </c:url>
                         <a class="page-link" href="${lastUrl}" title="Trang cuối">&raquo;</a>
                     </li>
