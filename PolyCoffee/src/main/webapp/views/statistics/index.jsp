@@ -46,6 +46,47 @@
         </div>
     </div>
 
+    <div class="card mt-3">
+        <div class="card-header bg-light fw-semibold">Top 5 loại nước bán chạy nhất</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width:90px;">Hạng</th>
+                            <th>Tên đồ uống</th>
+                            <th class="text-end">Số lượng đã bán</th>
+                            <th class="text-end">Doanh thu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${topDrinks}" var="item" varStatus="st">
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">#${st.index + 1}</span>
+                                </td>
+                                <td>${item.drinkName}</td>
+                                <td class="text-end">
+                                    <fmt:formatNumber value="${item.totalQuantity}" type="number"/>
+                                </td>
+                                <td class="text-end">
+                                    <fmt:formatNumber value="${item.totalRevenue}" type="number"/> đ
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${empty topDrinks}">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    Không có dữ liệu bán hàng trong khoảng thời gian đã chọn.
+                                </td>
+                            </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <c:set var="extraScripts" scope="request">

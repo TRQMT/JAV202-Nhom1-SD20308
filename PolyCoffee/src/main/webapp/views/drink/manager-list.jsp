@@ -93,8 +93,8 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty drink.image}">
-                                            <img src="${pageContext.request.contextPath}/uploads/${drink.image}"
-                                                 onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/${drink.image}';"
+                                            <img src="${pageContext.request.contextPath}/images/${drink.image}"
+                                                onerror="this.onerror=function(){this.style.display='none';};this.src='${pageContext.request.contextPath}/uploads/${drink.image}';"
                                                  width="48" height="48"
                                                  style="object-fit:cover; border-radius:8px;">
                                         </c:when>

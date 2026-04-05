@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.polycoffee.entity.BestSellingDrink;
 import com.polycoffee.dao.StatisticDAO;
 import com.polycoffee.entity.RevenueByDay;
 import com.polycoffee.entity.User;
@@ -44,15 +45,19 @@ public class StatisticServlet extends HttpServlet {
         String toDateRaw = ParamUtil.getString(req, "toDate");
 
         List<RevenueByDay> revenues;
+        List<BestSellingDrink> topDrinks;
 
         try {
             revenues = statisticDAO.getRevenueByDay(fromDate, toDate);
+            topDrinks = statisticDAO.getTop5BestSellingDrinks(fromDate, toDate);
         } catch (Exception e) {
             revenues = List.of();
+            topDrinks = List.of();
             req.setAttribute("error", "Không thể tải dữ liệu thống kê. Vui lòng kiểm tra dữ liệu hoặc stored procedure.");
         }
 
         req.setAttribute("revenues", revenues);
+        req.setAttribute("topDrinks", topDrinks);
         req.setAttribute("fromDate", fromDateRaw);
         req.setAttribute("toDate", toDateRaw);
         req.setAttribute("chartLabels", toJsonDateLabels(revenues));
