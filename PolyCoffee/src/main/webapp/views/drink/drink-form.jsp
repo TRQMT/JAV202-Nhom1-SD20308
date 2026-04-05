@@ -44,7 +44,14 @@
                     <label class="form-label fw-semibold">Danh mục <span class="text-danger">*</span></label>
                     <select class="form-select" name="categoryId" required>
                         <option value="">-- Chọn danh mục --</option>
+<<<<<<< HEAD
+                         <c:forEach var="cat" items="${categories}">
+=======
                         <c:forEach var="cat" items="${categories}">
+<<<<<<< HEAD
+=======
+>>>>>>> 13d5135460790d32aa498fd949322d2f88854b8b
+>>>>>>> 709eb4d3dd22e074dc1f521fd92d8bb606800f6f
                             <option value="${cat.maLoai}"
                                     ${cat.maLoai == drink.categoryId ? 'selected' : ''}>
                                 ${cat.tenLoai}
