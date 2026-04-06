@@ -56,19 +56,6 @@
         <c:otherwise>
             <div class="row g-4">
 
-                <%-- Bar chart --%>
-                <div class="col-12 col-lg-7">
-                    <div class="card h-100">
-                        <div class="card-header fw-semibold">
-                            <span class="material-symbols-outlined">bar_chart</span>
-                            Biểu đồ số lượng bán ra
-                        </div>
-                        <div class="card-body">
-                            <canvas id="chartTop5" height="280"></canvas>
-                        </div>
-                    </div>
-                </div>
-
                 <%-- Ranking table --%>
                 <div class="col-12 col-lg-5">
                     <div class="card h-100">
