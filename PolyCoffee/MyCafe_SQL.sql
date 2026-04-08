@@ -1,4 +1,11 @@
-﻿create database MyCafe;
+﻿IF DB_ID(N'MyCafe') IS NOT NULL
+BEGIN
+  ALTER DATABASE MyCafe SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+  DROP DATABASE MyCafe;
+END;
+GO
+
+create database MyCafe;
 GO
 
 use MyCafe
@@ -162,14 +169,55 @@ INSERT INTO HOADON
   (ngayTao, tongTien, trangThai, MaNV, MaKH)
 VALUES
   (SYSDATETIME(), 54000.00, N'Paid', 1, 1),
-  (SYSDATETIME(), 76000.00, N'Paid', 2, 2);
+  (SYSDATETIME(), 76000.00, N'Paid', 2, 2),
+  ('2026-03-01T08:15:00', 0.00, N'Paid', 1, 1),
+  ('2026-03-03T10:05:00', 0.00, N'Paid', 2, 2),
+  ('2026-03-07T14:20:00', 0.00, N'Pending', 1, 3),
+  ('2026-03-12T09:45:00', 0.00, N'Paid', 2, 1),
+  ('2026-03-18T16:10:00', 0.00, N'Paid', 1, 2),
+  ('2026-03-22T11:30:00', 0.00, N'Cancelled', 2, 3),
+  ('2026-03-27T18:05:00', 0.00, N'Paid', 1, 1),
+  ('2026-04-01T07:50:00', 0.00, N'Paid', 2, 2),
+  ('2026-04-05T15:40:00', 0.00, N'Pending', 1, 3),
+  ('2026-04-08T20:25:00', 0.00, N'Paid', 2, 1);
 
 INSERT INTO CHITIETHOADON
   (donGia, soLuong, MaHD, MaDoUong)
 VALUES
+  (29000.00, 1, 1, 2),
+  (25000.00, 1, 1, 1),
   (29000.00, 1, 2, 2),
   (25000.00, 1, 2, 1),
-  (38000.00, 2, 2, 15);
+  (38000.00, 2, 2, 15),
+  (25000.00, 2, 3, 1),
+  (39000.00, 1, 3, 37),
+  (45000.00, 1, 4, 5),
+  (35000.00, 1, 4, 14),
+  (40000.00, 1, 5, 26),
+  (30000.00, 1, 5, 43),
+  (48000.00, 1, 6, 33),
+  (36000.00, 1, 6, 41),
+  (45000.00, 1, 7, 29),
+  (38000.00, 1, 7, 40),
+  (34000.00, 2, 8, 28),
+  (25000.00, 1, 8, 15),
+  (39000.00, 1, 9, 13),
+  (36000.00, 1, 9, 52),
+  (49000.00, 1, 10, 35),
+  (42000.00, 1, 10, 23),
+  (45000.00, 1, 11, 11),
+  (35000.00, 1, 11, 50),
+  (42000.00, 1, 12, 31),
+  (38000.00, 1, 12, 51);
+
+UPDATE hd
+SET hd.tongTien = cthd.tongTien
+FROM HOADON hd
+JOIN (
+  SELECT MaHD, SUM(donGia * soLuong) AS tongTien
+  FROM CHITIETHOADON
+  GROUP BY MaHD
+) cthd ON cthd.MaHD = hd.MaHD;
 
 SELECT *
 FROM HOADON;
