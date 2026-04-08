@@ -13,6 +13,7 @@ import com.polycoffee.util.JdbcUtil;
 public class BillDAO implements CrudDAO<Bill, Integer> {
 	private static final int DEFAULT_CUSTOMER_ID = 1;
 	private static final String SELECT_BILL_BASE = "SELECT h.MaHD AS id, h.MaNV AS user_id, nv.hoTen AS user_name, CONCAT('HD', h.MaHD) AS code, h.ngayTao AS created_at, h.tongTien AS total, h.trangThai AS status FROM HOADON h LEFT JOIN NHANVIEN nv ON h.MaNV = nv.MaNV";
+	private static final String ORDER_BILL_BY_ID = " ORDER BY h.MaHD ASC";
 
 	@Override
 	public int create(Bill entity) {
@@ -53,7 +54,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 	@Override
 	public List<Bill> findAll() {
-		return this.findBySql(SELECT_BILL_BASE + " ORDER BY h.ngayTao DESC, h.MaHD DESC");
+		return this.findBySql(SELECT_BILL_BASE + ORDER_BILL_BY_ID);
 	}
 
 	@Override
@@ -311,9 +312,7 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 
 //	Lấy danh sách hóa đơn của user theo userId
 	public List<Bill> findByUserId(Integer userId) {
-//		Lấy danh sách hóa đơn của user, sắp xếp theo trạng thái: waiting, finish, cancel
-		String sql = SELECT_BILL_BASE
-				+ " WHERE h.MaNV = ? ORDER BY CASE LOWER(h.trangThai) WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 WHEN 'paid' THEN 2 ELSE 4 END, h.ngayTao DESC";
+		String sql = SELECT_BILL_BASE + " WHERE h.MaNV = ?" + ORDER_BILL_BY_ID;
 		try {
 			return this.findBySql(sql, userId);
 		} catch (Exception e) {
@@ -349,12 +348,12 @@ public class BillDAO implements CrudDAO<Bill, Integer> {
 	}
 
 	public List<Bill> findByPage(int offset, int limit) {
-		String sql = SELECT_BILL_BASE + " ORDER BY h.ngayTao DESC, h.MaHD DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+		String sql = SELECT_BILL_BASE + ORDER_BILL_BY_ID + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 		return this.findBySql(sql, offset, limit);
 	}
 
 	public List<Bill> findByUserIdAndPage(Integer userId, int offset, int limit) {
-		String sql = SELECT_BILL_BASE + " WHERE h.MaNV = ? ORDER BY h.ngayTao DESC, h.MaHD DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+		String sql = SELECT_BILL_BASE + " WHERE h.MaNV = ?" + ORDER_BILL_BY_ID + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 		return this.findBySql(sql, userId, offset, limit);
 	}
 
