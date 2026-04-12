@@ -1,131 +1,351 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="jakarta.tags.core"      prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt"       prefix="fmt" %>
-<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+   <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+<!-- HEADER -->
+<jsp:include page="/views/layout/admin/header.jsp">
+    <jsp:param name="pageTitle" value="Trang chủ"/>
+    <jsp:param name="activeNav" value="home"/>
+</jsp:include>
 
-<%--
-    TODO (TEAM):
-    - Import database from .sql file
-    - Create DB connection (JDBC)
-    - Check tables: drinks, categories, staff, bills
-    - Update DB username/password
---%>
+<!-- MAIN -->
+<main class="home-page">
 
-<c:set var="pageTitle" value="Trang chủ" scope="request"/>
-<c:set var="activeNav" value="home"      scope="request"/>
+    <!-- HERO -->
+    <div class="hero-full">
+        <div class="hero-overlay"></div>
 
-<%@ include file="/views/layout/admin/header.jsp" %>
+        <div class="hero-content">
+            <div class="hero-tag">
+                <span class="material-symbols-outlined" style="font-size:14px">local_cafe</span>
+                100% Nguyên chất · Từ Hạt Đến Ly
+            </div>
+            <h1>Fresh Coffee,<br><span>Real Flavor</span></h1>
+            <p>Thưởng thức cà phê nguyên chất mỗi ngày tại Poly Coffee.<br>Pha chế tươi mỗi buổi sáng.</p>
 
-<!-- ===== MAIN ===== -->
-<main class="container mt-5">
-
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Choose Your Coffee</h2>
-        <p class="text-muted">Select a drink to start your experience</p>
+            <div class="hero-btns">
+                <a href="${pageContext.request.contextPath}/manager/drinks"
+                   class="btn-hero-primary">
+                    <span class="material-symbols-outlined" style="font-size:18px">menu_book</span>
+                    Browse Menu
+                </a>
+                <a href="${pageContext.request.contextPath}/trang-chu#about"
+                   class="btn-hero-ghost">
+                    <span class="material-symbols-outlined" style="font-size:18px">play_circle</span>
+                    Our Story
+                </a>
+            </div>
+        </div>
     </div>
 
-    <%-- Hiển thị drinks từ DB nếu có, fallback về 3 card tĩnh --%>
-    <c:choose>
+    <!-- DRINK LIST -->
+    <div class="drink-section">
 
-        <c:when test="${not empty drinks}">
-            <div class="row g-4">
-                <c:forEach items="${drinks}" var="drink">
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card text-center p-3 h-100">
+        <h2 class="section-title text-center" style="padding-bottom: 20px;">Danh sách đồ uống</h2>
 
-                            <c:choose>
-                                <c:when test="${not empty drink.image}">
-                                    <img src="${pageContext.request.contextPath}/uploads/${drink.image}"
-                                         class="card-img-top mb-2"
-                                         style="height:120px;object-fit:cover;border-radius:10px;"
-                                         alt="${drink.name}"
-                                         onerror="this.src='${pageContext.request.contextPath}/images/cafesua.jpg'">
-                                </c:when>
-                                <c:otherwise>
-                                    <div style="height:120px;background:#f8f5f0;border-radius:10px;
-                                                display:flex;align-items:center;justify-content:center;"
-                                         class="mb-2">
-                                        <span class="material-symbols-outlined"
-                                              style="font-size:48px;color:#c9a07a;">coffee</span>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
+        <div class="drink-wrapper">
 
-                            <h6 class="fw-bold">${drink.name}</h6>
-                            <p class="text-muted small mb-2">${drink.description}</p>
-                            <p class="fw-semibold mb-3" style="color:#6b3317;">
-                                <fmt:formatNumber value="${drink.price}" type="number"/> đ
-                            </p>
+            <div class="drink-grid">
 
-                            <c:if test="${sessionScope.user != null}">
-                                <form action="${pageContext.request.contextPath}/employee/pos/add-item"
-                                      method="post">
-                                    <input type="hidden" name="drinkId" value="${drink.id}">
-                                    <button type="submit" class="btn btn-primary btn-sm w-100">
-                                        <span class="material-symbols-outlined">shopping_cart</span>Chọn
-                                    </button>
-                                </form>
-                            </c:if>
+                <c:forEach var="d" items="${drinks}" varStatus="loop">
+                    <div class="drink-card drink-item ${loop.index >= 10 ? 'hidden' : ''}">
 
-                            <c:if test="${sessionScope.user == null}">
-                                <a href="${pageContext.request.contextPath}/dang-nhap"
-                                   class="btn btn-outline-primary btn-sm w-100">
-                                    <span class="material-symbols-outlined">lock</span>Đăng nhập để chọn
-                                </a>
-                            </c:if>
+                        <img
+                            src="${pageContext.request.contextPath}/images/${d.image}"
+                            class="drink-img"
+                            onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/uploads/${d.image}'"
+                        >
 
+                        <div class="drink-body">
+                            <h4>${d.name}</h4>
+                            <p class="price">${d.price} VNĐ</p>
+
+                            <a href="${pageContext.request.contextPath}/employee/pos?id=${d.id}"
+                               class="btn btn-sm btn-primary">
+                                Chọn
+                            </a>
                         </div>
+
                     </div>
                 </c:forEach>
-            </div>
-        </c:when>
-
-        <%-- Fallback: chưa có data từ DB --%>
-        <c:otherwise>
-            <div class="row g-4 justify-content-center">
-
-                <div class="col-md-4">
-                    <div class="card text-center p-3">
-                        <span class="material-symbols-outlined"
-                              style="font-size:48px;color:#6b3317;">coffee</span>
-                        <h5 class="mt-2">Espresso</h5>
-                        <p class="text-muted small">Strong and bold coffee</p>
-                        <button class="btn btn-primary btn-sm">
-                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
-                        </button>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card text-center p-3">
-                        <span class="material-symbols-outlined"
-                              style="font-size:48px;color:#6b3317;">local_cafe</span>
-                        <h5 class="mt-2">Cappuccino</h5>
-                        <p class="text-muted small">Smooth with milk foam</p>
-                        <button class="btn btn-success btn-sm">
-                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
-                        </button>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card text-center p-3">
-                        <span class="material-symbols-outlined"
-                              style="font-size:48px;color:#6b3317;">emoji_food_beverage</span>
-                        <h5 class="mt-2">Latte</h5>
-                        <p class="text-muted small">Light and creamy</p>
-                        <button class="btn btn-warning btn-sm">
-                            <span class="material-symbols-outlined">shopping_cart</span>Chọn
-                        </button>
-                    </div>
-                </div>
 
             </div>
-        </c:otherwise>
 
-    </c:choose>
+            <!-- LOAD MORE -->
+            <div class="text-center mt-4">
+                <button id="loadMoreBtn" class="btn btn-outline-primary">
+                    Load more
+                </button>
+            </div>
+
+        </div>
+
+    </div>
 
 </main>
-<%-- ===== END MAIN ===== --%>
+
+<!-- SCRIPT -->
+<script>
+    let current = 10;
+    const step = 10;
+
+    const items = document.querySelectorAll('.drink-item');
+    const btn = document.getElementById('loadMoreBtn');
+
+    btn.addEventListener('click', () => {
+        let count = 0;
+
+        for (let i = current; i < items.length && count < step; i++) {
+            items[i].classList.remove('hidden');
+            count++;
+        }
+
+        current += step;
+
+        if (current >= items.length) {
+            btn.style.display = 'none';
+        }
+    });
+</script>
+
+
+<!-- STYLE -->
+<style>
+
+/* FULL PAGE */
+.home-page {
+    width: 100%;
+}
+
+/* HERO */
+.hero-full {
+    position: relative;
+    height: 520px;
+    background: url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1920")
+                center/cover no-repeat;
+    display: flex;
+    align-items: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        rgba(26, 10, 0, 0.88) 0%,
+        rgba(59, 31, 10, 0.65) 50%,
+        rgba(0, 0, 0, 0.08) 100%
+    );
+}
+
+.hero-content {
+    position: relative;
+    color: white;
+    text-align: left;
+    padding-left: 72px;
+    max-width: 560px;
+}
+
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(184, 98, 26, 0.25);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(212, 144, 58, 0.4);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 20px;
+}
+
+.hero-content h1 {
+    font-size: 52px;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    line-height: 1.12;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.hero-content h1 span {
+    color: #d4903a;
+    font-style: italic;
+}
+
+.hero-content p {
+    color: rgba(255,255,255,0.80);
+    margin-bottom: 32px;
+    font-size: 15.5px;
+    line-height: 1.65;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #b8621a;
+    color: #fff;
+    padding: 13px 26px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.btn-hero-primary:hover {
+    background: #3b1f0a;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-hero-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid rgba(255,255,255,0.55);
+    color: #fff;
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-hero-ghost:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.8);
+    color: #fff;
+}
+
+/* SECTION */
+.drink-section {
+    padding: 48px 24px 60px;
+    background: #fdf8f2;
+}
+
+.section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #2c1810;
+}
+
+/* CENTER WRAPPER */
+.drink-wrapper {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+/* GRID */
+.drink-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .drink-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+    .drink-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 440px) {
+    .drink-grid { grid-template-columns: 1fr; }
+}
+
+/* CARD */
+.drink-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ede0cc;
+    box-shadow: 0 2px 10px rgba(26,10,0,0.07);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.drink-card:hover {
+    box-shadow: 0 8px 28px rgba(26,10,0,0.14);
+    transform: translateY(-4px);
+}
+
+/* IMAGE */
+.drink-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+/* BODY */
+.drink-body {
+    padding: 16px 16px 20px;
+    text-align: center;
+}
+
+.drink-body h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c1810;
+    margin-bottom: 6px;
+}
+
+.price {
+    color: #b8621a;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.drink-body .btn {
+    background: #b8621a !important;
+    border-color: #b8621a !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 7px 28px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+}
+
+.drink-body .btn:hover {
+    background: #3b1f0a !important;
+    border-color: #3b1f0a !important;
+}
+
+/* LOAD MORE */
+#loadMoreBtn {
+    border-color: #b8621a !important;
+    color: #b8621a !important;
+    border-radius: 10px !important;
+    padding: 10px 36px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    background: transparent !important;
+    transition: all 0.2s !important;
+}
+
+#loadMoreBtn:hover {
+    background: #b8621a !important;
+    color: #fff !important;
+}
+
+/* HIDDEN */
+.hidden {
+    display: none;
+}
+
+</style>
 
 <%@ include file="/views/layout/admin/footer.jsp" %>
