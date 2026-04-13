@@ -144,6 +144,48 @@
     font-size: 18px;
     vertical-align: middle;
 }
+
+/* ── Navbar Responsive ── */
+@media (max-width: 1199px) {
+    .navbar .navbar-collapse {
+        background: #1a0a00;
+        padding: 12px 8px 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: 4px;
+    }
+    .navbar-nav.mx-auto {
+        gap: 2px;
+        margin-bottom: 8px;
+    }
+    .nav-link {
+        padding: 10px 14px !important;
+        border-radius: 8px;
+    }
+    .navbar .navbar-nav:last-child .nav-link.dropdown-toggle {
+        border-radius: 8px !important;
+        margin-top: 4px;
+        width: 100%;
+        justify-content: center;
+    }
+    .dropdown-menu {
+        position: static !important;
+        background: rgba(255,255,255,0.05) !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin-top: 4px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 17px !important;
+    }
+    .navbar-brand .material-symbols-outlined {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 18px !important;
+    }
+}
 </style>
 
 ${extraStyles}

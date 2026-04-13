@@ -834,3 +834,76 @@ footer {
 .btn-ghost:hover {
     background: rgba(255,255,255,0.1);
 }
+
+/* =============================================
+   GLOBAL RESPONSIVE — All pages
+   ============================================= */
+
+/* Tablets ≤768px */
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+
+  .container { padding: 0 16px; }
+
+  main { padding: 20px 0 36px; }
+
+  /* Cards */
+  .card-body { padding: 16px !important; }
+  .card-header { padding: 12px 16px !important; }
+
+  /* Tables — allow horizontal scroll */
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table { font-size: 13px; }
+  .table thead th { padding: 10px 12px; font-size: 11px; }
+  .table tbody td { padding: 10px 12px; }
+
+  /* Forms */
+  .form-control, .form-select { font-size: 14px !important; padding: 8px 12px !important; }
+
+  /* Buttons */
+  .btn { font-size: 13px; padding: 7px 14px; }
+
+  /* Search bar */
+  .search-row { flex-wrap: wrap; }
+  .search-input { width: 100% !important; }
+  .btn-search, .btn-reset { flex: 1; justify-content: center; }
+
+  /* Login */
+  .login-split { padding: 24px 0; }
+  .login-card { max-width: 100%; border-radius: 16px !important; }
+
+  /* Page heading */
+  .page-heading { font-size: 18px; }
+}
+
+/* Large phones ≤576px */
+@media (max-width: 576px) {
+  main { padding: 16px 0 28px; }
+
+  /* Stack Bootstrap columns */
+  .row > [class*="col-"] { flex: 0 0 100%; max-width: 100%; }
+
+  /* Tables */
+  .table { font-size: 12px; }
+  .table thead th { padding: 8px 10px; }
+  .table tbody td { padding: 8px 10px; }
+
+  /* Thumb images in tables */
+  .thumb { width: 44px; height: 36px; }
+
+  /* Badges */
+  .badge { font-size: 10.5px !important; }
+
+  /* Unauth page */
+  .unauth-banner { padding: 32px 16px 24px; }
+  .unauth-body { padding: 20px 16px; }
+  .unauth-actions { flex-direction: column; }
+  .unauth-actions .btn { width: 100%; }
+}
+
+/* Small phones ≤400px */
+@media (max-width: 400px) {
+  .container { padding: 0 10px; }
+  .card-body { padding: 12px !important; }
+  .btn { padding: 6px 12px; font-size: 12.5px; }
+}

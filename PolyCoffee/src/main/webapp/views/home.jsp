@@ -141,6 +141,7 @@
 /* FULL PAGE */
 .home-page {
     width: 100%;
+    overflow-x: hidden;
 }
 
 /* HERO */
@@ -169,7 +170,8 @@
     color: white;
     text-align: left;
     padding-left: 72px;
-    max-width: 560px;
+    padding-right: 32px;
+    max-width: 600px;
 }
 
 .hero-tag {
@@ -305,9 +307,6 @@
     gap: 24px;
 }
 
-@media (max-width: 1024px) { .drink-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px)  { .drink-grid { grid-template-columns: 1fr; } }
-
 /* CARD */
 .drink-card {
     background: #fff;
@@ -431,7 +430,7 @@ footer {
 }
 
 .footer-inner {
-    max-width: 1100px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 52px 32px 28px;
 }
@@ -518,9 +517,7 @@ footer {
     text-decoration: none;
 }
 
-.footer-link:hover {
-    color: #d4903a;
-}
+.footer-link:hover { color: #d4903a; }
 
 .footer-bottom {
     border-top: 1px solid rgba(255,255,255,0.08);
@@ -534,21 +531,66 @@ footer {
     color: rgba(255,255,255,0.28);
 }
 
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 28px;
-    }
+/* =============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================= */
+
+/* Large tablets / small laptops ≤1024px */
+@media (max-width: 1024px) {
+    .hero-content { padding-left: 48px; }
+    .hero-content h1 { font-size: 42px; }
+    .drink-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 }
 
-@media (max-width: 540px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        text-align: center;
-    }
+/* Tablets ≤768px */
+@media (max-width: 768px) {
+    .hero-full { height: 420px; }
+    .hero-content { padding-left: 32px; padding-right: 24px; max-width: 100%; }
+    .hero-content h1 { font-size: 34px; }
+    .hero-content p { font-size: 14px; margin-bottom: 24px; }
+    .hero-tag { font-size: 12px; }
+    .btn-hero-primary { padding: 11px 20px; font-size: 14px; }
+    .drink-section { padding: 48px 16px 56px; }
+    .section-title { font-size: 26px; }
+    .drink-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .drink-img { height: 180px; }
+    .footer-inner { padding: 40px 24px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+}
+
+/* Large phones ≤576px */
+@media (max-width: 576px) {
+    .hero-full { height: 380px; }
+    .hero-content { padding-left: 20px; padding-right: 20px; }
+    .hero-content h1 { font-size: 28px; }
+    .hero-content p { font-size: 13.5px; }
+    .hero-tag { font-size: 11.5px; padding: 5px 10px; }
+    .hero-btns { gap: 10px; }
+    .btn-hero-primary { padding: 10px 18px; font-size: 13.5px; width: 100%; justify-content: center; }
+    .drink-section { padding: 40px 12px 48px; }
+    .section-title { font-size: 22px; }
+    .section-sub { font-size: 13.5px; }
+    .drink-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .drink-img { height: 150px; }
+    .drink-body { padding: 14px 12px 18px; }
+    .drink-body h4 { font-size: 14px; }
+    .price { font-size: 13px; }
+    .btn-choose { padding: 7px 20px; font-size: 13px; }
+    .btn-viewall { width: 100%; justify-content: center; font-size: 14px; padding: 11px 20px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .footer-inner { padding: 32px 16px 20px; }
+    .footer-bottom { flex-direction: column; text-align: center; gap: 6px; }
+}
+
+/* Small phones ≤400px */
+@media (max-width: 400px) {
+    .hero-full { height: 340px; }
+    .hero-content h1 { font-size: 24px; }
+    .drink-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .drink-img { height: 130px; }
+    .bestseller-badge { font-size: 9.5px; padding: 3px 7px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 20px; }
 }
 
 </style>
