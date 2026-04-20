@@ -1,10 +1,13 @@
-entity\User.class
 utils\ParamUtil.class
-servlet\UserServlet.class
 entity\Drink.class
-dao\UserDAO.class
+dao\CategoryDAO.class
 dao\CrudDAO.class
+servlet\CategoryServlet.class
+servlet\LoginServlet.class
+entity\Category.class
+entity\User.class
+servlet\UserServlet.class
+dao\UserDAO.class
 servlet\DrinkServlet.class
 utils\JdbcUtil.class
 dao\DrinkDAO.class
-servlet\LoginServlet.class
